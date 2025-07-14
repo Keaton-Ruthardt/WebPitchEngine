@@ -12,6 +12,7 @@ interface CountTreeData {
     weak_contact_rate?: number;
     chase_rate?: number;
     pitches: number;
+    count?: string; // Add this optional property
   }>;
 }
 
@@ -222,7 +223,7 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
                     })}
                     <div className="flex justify-between">
                       <span>Pitches:</span>
-                      <span>{rec.pitches || rec.count}</span>
+                      <span>{rec.pitches}</span>
                     </div>
                   </div>
                 </div>
