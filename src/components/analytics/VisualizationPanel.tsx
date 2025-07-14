@@ -147,7 +147,7 @@ const VisualizationPanel = ({ reportData, isGenerating }: VisualizationPanelProp
                 <div className="mt-4 flex justify-center space-x-6 text-sm">
                   <div className="flex items-center gap-2">
                     <div className="w-4 h-4 bg-red-600 rounded"></div>
-                    <span className="text-slate-300">Hot Zone (OPS > .850)</span>
+                    <span className="text-slate-300">Hot Zone (OPS &gt; .850)</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-4 h-4 bg-yellow-600 rounded"></div>
@@ -155,7 +155,7 @@ const VisualizationPanel = ({ reportData, isGenerating }: VisualizationPanelProp
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-4 h-4 bg-blue-600 rounded"></div>
-                    <span className="text-slate-300">Cool (< .750)</span>
+                    <span className="text-slate-300">Cool (&lt; .750)</span>
                   </div>
                 </div>
               </div>
