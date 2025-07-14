@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { Award } from "lucide-react";
+import CountTreeVisualization from "./CountTreeVisualization";
 
 interface VisualizationPanelProps {
   reportData: any;
@@ -52,25 +52,15 @@ const VisualizationPanel = ({ reportData, isGenerating, filters }: Visualization
             <p>Pitcher: <span className="text-white font-medium">{reportData.analysisMetadata.pitcher}</span></p>
             <p>vs. <span className="text-white font-medium">{reportData.analysisMetadata.opponent}</span></p>
             <p>Years: {reportData.analysisMetadata.years} | League: {reportData.analysisMetadata.league}</p>
+            <p>Total Pitches: <span className="text-white font-medium">{reportData.analysisMetadata.totalPitches}</span></p>
           </div>
         )}
       </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="bg-slate-700/30 rounded-lg p-6 text-center">
-          <p className="text-slate-300 text-lg mb-4">Count-specific pitch recommendations coming soon!</p>
-          <p className="text-slate-400">This will show the pitch decision tree based on ball-strike counts,</p>
-          <p className="text-slate-400">mirroring your Python backend's count weighting system.</p>
-          <div className="mt-6 text-left">
-            <h4 className="text-white font-semibold mb-3">Your Original Count Tree Logic Will Include:</h4>
-            <ul className="text-slate-300 space-y-2">
-              <li>• Count-specific pitch probability analysis</li>
-              <li>• Weighted scoring based on game situation</li>
-              <li>• Historical performance by count</li>
-              <li>• Advanced metrics integration (whiff rate, hard hit rate)</li>
-              <li>• Your research-backed weighting system</li>
-            </ul>
-          </div>
-        </div>
+      <CardContent>
+        <CountTreeVisualization 
+          reportData={reportData}
+          selectedMetrics={filters.metricsSelection.selectedMetrics}
+        />
       </CardContent>
     </Card>
   );

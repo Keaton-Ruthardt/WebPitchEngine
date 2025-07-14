@@ -6,6 +6,29 @@ import FilterPanel from "@/components/analytics/FilterPanel";
 import VisualizationPanel from "@/components/analytics/VisualizationPanel";
 import { useToast } from "@/hooks/use-toast";
 
+// Count weights based on your Python backend logic
+const COUNT_WEIGHTS = {
+  '0-0': { is_hard_hit: 0.745, is_called_strike: 0.101, is_weak_contact: 0.078, is_whiff: 0.067, is_chase: 0.009 },
+  '0-1': { is_hard_hit: 0.877, is_called_strike: 0.053, is_chase: 0.027, is_whiff: 0.023, is_weak_contact: 0.019 },
+  '0-2': { is_hard_hit: 0.529, is_whiff: 0.349, is_called_strike: 0.119, is_chase: 0.002, is_weak_contact: 0.001 },
+  '1-0': { is_hard_hit: 0.693, is_weak_contact: 0.124, is_called_strike: 0.087, is_whiff: 0.083, is_chase: 0.013 },
+  '1-1': { is_hard_hit: 0.858, is_called_strike: 0.049, is_weak_contact: 0.032, is_chase: 0.031, is_whiff: 0.030 },
+  '1-2': { is_hard_hit: 0.511, is_whiff: 0.350, is_called_strike: 0.126, is_weak_contact: 0.011, is_chase: 0.003 },
+  '2-0': { is_hard_hit: 0.418, is_weak_contact: 0.248, is_called_strike: 0.185, is_whiff: 0.120, is_chase: 0.030 },
+  '2-1': { is_hard_hit: 0.655, is_weak_contact: 0.127, is_called_strike: 0.107, is_whiff: 0.082, is_chase: 0.029 },
+  '2-2': { is_whiff: 0.478, is_hard_hit: 0.310, is_called_strike: 0.164, is_weak_contact: 0.043, is_chase: 0.006 },
+  '3-0': { is_called_strike: 0.759, is_weak_contact: 0.146, is_whiff: 0.053, is_hard_hit: 0.033, is_chase: 0.009 },
+  '3-1': { is_weak_contact: 0.433, is_called_strike: 0.249, is_whiff: 0.199, is_chase: 0.064, is_hard_hit: 0.054 },
+  '3-2': { is_whiff: 0.485, is_called_strike: 0.294, is_weak_contact: 0.169, is_chase: 0.029, is_hard_hit: 0.022 }
+};
+
+const COUNT_DIFFICULTY_MODIFIER = {
+  '0-0': 0.85, '0-1': 0.8, '0-2': 0.95,
+  '1-0': 0.85, '1-1': 0.8, '1-2': 0.95,
+  '2-0': 0.9, '2-1': 0.85, '2-2': 1.0,
+  '3-0': 1.0, '3-1': 1.0, '3-2': 1.0
+};
+
 const Analytics = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -47,6 +70,49 @@ const Analytics = () => {
     }
   }, [navigate, toast]);
 
+  const generateCountSpecificData = (basePitchRecommendations: any[]) => {
+    // Simulate count-specific analysis like your Python backend
+    const counts = Object.keys(COUNT_WEIGHTS);
+    const countSpecificData: any = {};
+
+    counts.forEach(count => {
+      const weights = COUNT_WEIGHTS[count as keyof typeof COUNT_WEIGHTS];
+      const modifier = COUNT_DIFFICULTY_MODIFIER[count as keyof typeof COUNT_DIFFICULTY_MODIFIER];
+      
+      // Apply count-specific scoring to each pitch type
+      const countPitches = basePitchRecommendations.map(pitch => {
+        // Recalculate score based on count weights
+        const rawScore = (
+          (pitch.whiff_rate * weights.is_whiff) +
+          (pitch.chase_rate || 0.1 * weights.is_chase) +
+          (pitch.weak_contact_rate || 0.1 * weights.is_weak_contact) +
+          (pitch.called_strike_rate * weights.is_called_strike) -
+          (pitch.hard_hit_rate * weights.is_hard_hit)
+        );
+        
+        // Apply scaling and modifier
+        const scaledScore = Math.max(1, Math.min(10, rawScore * 10)) * modifier;
+        
+        return {
+          ...pitch,
+          count: count,
+          score: scaledScore,
+          // Add some count-specific variation to make it realistic
+          whiff_rate: Math.max(0, Math.min(1, pitch.whiff_rate + (Math.random() - 0.5) * 0.1)),
+          hard_hit_rate: Math.max(0, Math.min(1, pitch.hard_hit_rate + (Math.random() - 0.5) * 0.05)),
+          called_strike_rate: Math.max(0, Math.min(1, pitch.called_strike_rate + (Math.random() - 0.5) * 0.05))
+        };
+      });
+
+      // Sort by score and take top 3
+      countSpecificData[count] = countPitches
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 3);
+    });
+
+    return countSpecificData;
+  };
+
   const handleGenerateReport = async () => {
     // Validation
     if (!filters.pitcherSelection.pitcher) {
@@ -81,45 +147,63 @@ const Analytics = () => {
     // Simulate API call to your Flask backend
     setTimeout(() => {
       // Enhanced mock data based on your Python backend structure
+      const basePitchRecommendations = [
+        { 
+          pitch_type: "4-Seam Fastball", 
+          probability: 0.42, 
+          count: 187,
+          whiff_rate: 0.234,
+          hard_hit_rate: 0.156,
+          called_strike_rate: 0.089,
+          weak_contact_rate: 0.078,
+          chase_rate: 0.045,
+          score: 8.2
+        },
+        { 
+          pitch_type: "Slider", 
+          probability: 0.31, 
+          count: 134,
+          whiff_rate: 0.389,
+          hard_hit_rate: 0.098,
+          called_strike_rate: 0.045,
+          weak_contact_rate: 0.067,
+          chase_rate: 0.156,
+          score: 7.8
+        },
+        { 
+          pitch_type: "Changeup", 
+          probability: 0.18, 
+          count: 78,
+          whiff_rate: 0.312,
+          hard_hit_rate: 0.123,
+          called_strike_rate: 0.067,
+          weak_contact_rate: 0.089,
+          chase_rate: 0.098,
+          score: 6.9
+        },
+        { 
+          pitch_type: "Curveball", 
+          probability: 0.09, 
+          count: 39,
+          whiff_rate: 0.441,
+          hard_hit_rate: 0.087,
+          called_strike_rate: 0.078,
+          weak_contact_rate: 0.056,
+          chase_rate: 0.123,
+          score: 6.1
+        }
+      ];
+
+      // Generate count-specific data
+      const countSpecificRecommendations = generateCountSpecificData(basePitchRecommendations);
+      
+      // Flatten for the visualization component
+      const flattenedRecommendations = Object.entries(countSpecificRecommendations)
+        .flatMap(([count, pitches]) => (pitches as any[]).map(pitch => ({ ...pitch, count })));
+
       const mockData = {
-        pitchRecommendations: [
-          { 
-            pitch: "4-Seam Fastball", 
-            probability: 0.42, 
-            count: 187,
-            whiff_rate: 0.234,
-            hard_hit_rate: 0.156,
-            called_strike_rate: 0.089,
-            score: 8.2
-          },
-          { 
-            pitch: "Slider", 
-            probability: 0.31, 
-            count: 134,
-            whiff_rate: 0.389,
-            hard_hit_rate: 0.098,
-            called_strike_rate: 0.045,
-            score: 7.8
-          },
-          { 
-            pitch: "Changeup", 
-            probability: 0.18, 
-            count: 78,
-            whiff_rate: 0.312,
-            hard_hit_rate: 0.123,
-            called_strike_rate: 0.067,
-            score: 6.9
-          },
-          { 
-            pitch: "Curveball", 
-            probability: 0.09, 
-            count: 39,
-            whiff_rate: 0.441,
-            hard_hit_rate: 0.087,
-            called_strike_rate: 0.078,
-            score: 6.1
-          }
-        ],
+        pitchRecommendations: flattenedRecommendations,
+        countSpecificData: countSpecificRecommendations,
         batterHotZone: filters.opponentSelection.type === "specific" ? {
           zones: [
             { zone: 1, avg: 0.325, ops: 0.892, woba: 0.398 },
@@ -149,7 +233,7 @@ const Analytics = () => {
       
       toast({
         title: "Analysis Complete",
-        description: `Generated pitch recommendations for ${mockData.analysisMetadata.totalPitches} pitches`,
+        description: `Generated count tree analysis for ${mockData.analysisMetadata.totalPitches} pitches`,
       });
     }, 3000);
   };
