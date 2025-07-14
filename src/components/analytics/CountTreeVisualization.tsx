@@ -1,6 +1,5 @@
 
 import { useEffect, useState } from "react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
 
 interface CountTreeData {
   count: string;
@@ -56,7 +55,7 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
       const recommendations = reportData.pitchRecommendations.slice(startIndex, startIndex + 3);
       
       if (recommendations.length > 0) {
-        countGroups[count] = recommendations.map(rec => ({
+        countGroups[count] = recommendations.map((rec: any) => ({
           ...rec,
           count: count
         }));
@@ -245,7 +244,7 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
         </div>
         <div className="flex items-center space-x-2">
           <div className="w-4 h-4 rounded-full bg-red-500" />
-          <span className="text-slate-300">Poor (<3.5)</span>
+          <span className="text-slate-300">Poor (&lt;3.5)</span>
         </div>
       </div>
     </div>
