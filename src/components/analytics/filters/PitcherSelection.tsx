@@ -3,15 +3,21 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { Target } from "lucide-react";
 
+interface PitcherOption {
+  label: string;
+  value: number;
+}
+
 interface PitcherSelectionProps {
   league: string;
   pitcher: string;
   onPitcherChange: (value: string) => void;
+  pitcherOptions?: PitcherOption[];
 }
 
-const PitcherSelection = ({ league, pitcher, onPitcherChange }: PitcherSelectionProps) => {
-  // Push Performance Pitchers data from your Python backend
-  const pushPerformancePitchers = {
+const PitcherSelection = ({ league, pitcher, onPitcherChange, pitcherOptions = [] }: PitcherSelectionProps) => {
+  // Fallback data if API is not available
+  const fallbackPitchers = {
     mlb: [
       { name: "Garrett Crochet", id: "676979" },
       { name: "Logan Webb", id: "657277" },
@@ -30,7 +36,10 @@ const PitcherSelection = ({ league, pitcher, onPitcherChange }: PitcherSelection
     ]
   };
 
-  const pitchers = pushPerformancePitchers[league as keyof typeof pushPerformancePitchers] || [];
+  // Use API data if available, otherwise use fallback
+  const pitchers = pitcherOptions.length > 0 
+    ? pitcherOptions.map(p => ({ name: p.label, id: p.value.toString() }))
+    : fallbackPitchers[league as keyof typeof fallbackPitchers] || [];
 
   return (
     <div className="space-y-4">

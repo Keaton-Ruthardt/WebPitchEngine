@@ -1,73 +1,196 @@
-# Welcome to your Lovable project
+# Push Performance Insights Engine
 
-## Project info
+A comprehensive baseball analytics platform that provides data-driven pitch recommendations and performance insights for both MLB and MiLB pitchers.
 
-**URL**: https://lovable.dev/projects/2fff873c-92d3-4067-8032-ab08e78c3621
+## Features
 
-## How can I edit this code?
+### Enhanced Tree Visualization
+- **Interactive Hover Tooltips**: Hover over count nodes to see detailed metrics
+- **Raw Data Display**: Click on nodes to view comprehensive data tables
+- **Real-time Metrics**: Display whiff rates, hard hit rates, chase rates, and more
+- **Color-coded Performance**: Green (good), Yellow (average), Red (poor) based on scores
 
-There are several ways of editing your application.
+### Data Integration
+- **MLB Data**: Real-time Statcast data via pybaseball
+- **MiLB Support**: CSV upload functionality for minor league data
+- **Individualized Reports**: Player-specific analysis and recommendations
+- **Count-specific Analysis**: Detailed breakdown by ball-strike counts
 
-**Use Lovable**
+### Advanced Analytics
+- **Count Tree Analysis**: Visual representation of pitch recommendations by count
+- **Hot Zone Analysis**: Batter-specific zone analysis for specific matchups
+- **Performance Metrics**: Comprehensive statistical analysis
+- **Real-time Processing**: Live data fetching and analysis
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/2fff873c-92d3-4067-8032-ab08e78c3621) and start prompting.
+## Setup Instructions
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
+- Node.js 18+ and npm/bun
+- Python 3.8+ and pip
+- Git
 
-**Use your preferred IDE**
+### Backend Setup (Flask API)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. **Navigate to backend directory**:
+   ```bash
+   cd backend
+   ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+2. **Create virtual environment**:
+   ```bash
+   python -m venv venv
+   ```
 
-Follow these steps:
+3. **Activate virtual environment**:
+   - Windows: `venv\Scripts\activate`
+   - macOS/Linux: `source venv/bin/activate`
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+4. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+5. **Install pybaseball** (for MLB data):
+   ```bash
+   pip install pybaseball
+   ```
 
-# Step 3: Install the necessary dependencies.
-npm i
+6. **Start the Flask server**:
+   ```bash
+   python app.py
+   ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+The backend will run on `http://localhost:5000`
+
+### Frontend Setup (React + TypeScript)
+
+1. **Navigate to project root**:
+   ```bash
+   cd ..
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   # or
+   bun install
+   ```
+
+3. **Start development server**:
+   ```bash
+   npm run dev
+   # or
+   bun dev
+   ```
+
+The frontend will run on `http://localhost:5173`
+
+## Usage
+
+### MLB Analysis
+1. Select "MLB" as the league
+2. Choose year(s) for analysis (max 2 years)
+3. Select a pitcher from the dropdown
+4. Choose opponent type (specific batter or average handedness)
+5. Select metrics to display in hover tooltips
+6. Click "Generate Pitch Report"
+
+### MiLB Analysis
+1. Select "MiLB" as the league
+2. Choose year(s) for analysis
+3. Select a pitcher from the dropdown
+4. Upload CSV data for the selected pitcher
+5. Configure analysis parameters
+6. Generate the report
+
+### CSV Format for MiLB Data
+Required columns:
+- `pitch_type`: Type of pitch thrown (e.g., "4-Seam Fastball", "Slider")
+- `description`: Outcome of the pitch (e.g., "swinging_strike", "hit_into_play")
+- `balls`: Number of balls in count (0-3)
+- `strikes`: Number of strikes in count (0-2)
+- `events`: Final outcome of at-bat (e.g., "single", "strikeout")
+
+## API Endpoints
+
+### GET `/api/pitchers/{league}`
+Get available pitchers for a given league (MLB/MiLB)
+
+### POST `/api/analyze`
+Generate pitch recommendation analysis
+```json
+{
+  "pitcher_id": 676979,
+  "years": ["2023"],
+  "opponent_type": "specific",
+  "batter_name": "Aaron Judge",
+  "min_pitches": 10
+}
 ```
 
-**Edit a file directly in GitHub**
+### POST `/api/upload-milb`
+Upload MiLB CSV data for a pitcher
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### GET `/api/health`
+Health check endpoint
 
-**Use GitHub Codespaces**
+## Architecture
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Frontend (React + TypeScript)
+- **Components**: Modular UI components with shadcn/ui
+- **State Management**: React hooks for local state
+- **API Integration**: Service layer for backend communication
+- **Visualization**: Interactive count tree with Plotly.js
 
-## What technologies are used for this project?
+### Backend (Flask + Python)
+- **Data Processing**: pandas and numpy for statistical analysis
+- **MLB Integration**: pybaseball for Statcast data
+- **File Handling**: CSV upload and validation
+- **Authentication**: Flask-Login for user management
 
-This project is built with:
+## Data Flow
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+1. **User Input**: League, pitcher, years, opponent type
+2. **Data Fetching**: 
+   - MLB: pybaseball Statcast API
+   - MiLB: Uploaded CSV files
+3. **Processing**: Statistical analysis and count-specific calculations
+4. **Visualization**: Interactive tree with hover tooltips and raw data tables
+5. **Output**: Comprehensive pitch recommendations by count
 
-## How can I deploy this project?
+## Performance Metrics
 
-Simply open [Lovable](https://lovable.dev/projects/2fff873c-92d3-4067-8032-ab08e78c3621) and click on Share -> Publish.
+The engine calculates and displays:
+- **Whiff Rate**: Percentage of swinging strikes
+- **Hard Hit Rate**: Percentage of balls hit 95+ mph
+- **Called Strike Rate**: Percentage of called strikes
+- **Weak Contact Rate**: Percentage of balls hit <85 mph
+- **Chase Rate**: Percentage of swings on pitches outside the zone
 
-## Can I connect a custom domain to my Lovable project?
+## Contributing
 
-Yes, you can!
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## License
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+This project is licensed under the MIT License.
+
+## Support
+
+For issues and questions:
+1. Check the documentation
+2. Review existing issues
+3. Create a new issue with detailed information
+
+## Roadmap
+
+- [ ] Pitch sequencing analysis
+- [ ] Advanced statistical models
+- [ ] Real-time game analysis
+- [ ] Mobile app support
+- [ ] Team-level analytics
+- [ ] Historical trend analysis

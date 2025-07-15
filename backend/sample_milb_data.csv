@@ -1,0 +1,21 @@
+pitch_type,description,balls,strikes,events,zone,launch_speed,woba_value,est_slg_g,p_throws,stand
+4-Seam Fastball,called_strike,0,1,,5,,0.0,0.0,R,R
+Slider,swinging_strike,0,2,strikeout,7,,0.0,0.0,R,R
+4-Seam Fastball,hit_into_play,1,0,single,6,87.2,0.890,0.450,R,R
+Changeup,swinging_strike,1,1,,8,,0.0,0.0,R,R
+4-Seam Fastball,ball,2,0,,11,,0.0,0.0,R,R
+Slider,hit_into_play,2,1,double,4,102.1,1.250,0.750,R,R
+4-Seam Fastball,called_strike,2,2,,5,,0.0,0.0,R,R
+Curveball,swinging_strike,2,2,strikeout,9,,0.0,0.0,R,R
+4-Seam Fastball,hit_into_play,0,0,home_run,3,108.5,2.000,1.000,R,R
+Slider,ball,3,0,,12,,0.0,0.0,R,R
+Changeup,hit_into_play,3,1,groundout,6,78.3,0.000,0.000,R,R
+4-Seam Fastball,called_strike,0,1,,5,,0.0,0.0,R,R
+Slider,swinging_strike,0,2,strikeout,7,,0.0,0.0,R,R
+4-Seam Fastball,hit_into_play,1,0,single,6,89.1,0.890,0.450,R,R
+Changeup,swinging_strike,1,1,,8,,0.0,0.0,R,R
+4-Seam Fastball,ball,2,0,,11,,0.0,0.0,R,R
+Slider,hit_into_play,2,1,double,4,101.8,1.250,0.750,R,R
+4-Seam Fastball,called_strike,2,2,,5,,0.0,0.0,R,R
+Curveball,swinging_strike,2,2,strikeout,9,,0.0,0.0,R,R
+4-Seam Fastball,hit_into_play,0,0,home_run,3,107.9,2.000,1.000,R,R 

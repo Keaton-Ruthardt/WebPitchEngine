@@ -12,6 +12,12 @@ const YearSelection = ({ selectedYears, onYearToggle }: YearSelectionProps) => {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 4 }, (_, i) => (currentYear - i).toString());
 
+  const API_BASE_URL =
+    import.meta.env.VITE_API_URL ||
+    (process.env.NODE_ENV === 'production'
+      ? 'https://your-backend-service.onrender.com/api'
+      : 'http://localhost:5000/api');
+
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">

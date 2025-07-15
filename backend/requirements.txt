@@ -1,0 +1,10 @@
+Flask==2.3.3
+Flask-Login==0.6.3
+Flask-CORS==4.0.0
+pandas==2.1.4
+numpy==1.24.3
+pybaseball==2.2.5
+plotly==5.17.0
+dash==2.14.2
+dash-bootstrap-components==1.5.0
+Werkzeug==2.3.7
