@@ -107,9 +107,17 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
   }, [reportData]);
 
   const getNodeColor = (topScore: number) => {
-    if (topScore >= 7.5) return '#28a745'; // Green
-    if (topScore < 3.5) return '#dc3545';  // Red
-    return '#ffc107'; // Yellow
+    if (topScore >= 80) return '#28a745'; // Green - Strongly Recommended
+    if (topScore >= 60) return '#17a2b8'; // Blue - Recommended
+    if (topScore >= 40) return '#ffc107'; // Yellow - Consider
+    return '#dc3545'; // Red - Avoid
+  };
+
+  const getScoreLabel = (score: number) => {
+    if (score >= 80) return 'Strongly Recommend';
+    if (score >= 60) return 'Recommended';
+    if (score >= 40) return 'Consider';
+    return 'Avoid';
   };
 
   const formatMetricValue = (value: number, metric: string) => {
@@ -140,7 +148,7 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
                 {rec.pitch_type} {index === 0 && '(Best)'}
               </div>
               <div className="text-xs text-slate-300">
-                Score: {rec.score.toFixed(1)}
+                PER: {rec.score.toFixed(1)} ({getScoreLabel(rec.score)})
               </div>
               {selectedMetrics.map(metric => {
                 if (rec[metric] !== undefined) {
@@ -170,6 +178,25 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
   return (
     <TooltipProvider>
       <div className="space-y-6">
+        {/* Pitch Effectiveness Rating (PER) Description */}
+        <Card className="bg-slate-800/50 border-slate-700">
+          <CardContent className="pt-6">
+            <div className="text-center space-y-2">
+              <h3 className="text-lg font-semibold text-white">Pitch Effectiveness Rating (PER)</h3>
+              <p className="text-slate-300 text-sm">
+                Scores range from 0-100, indicating how effective each pitch type is for specific counts. 
+                Higher scores suggest better pitch selection for that situation.
+              </p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 text-xs">
+                <div className="text-green-400 font-medium">80-100: Strongly Recommend</div>
+                <div className="text-blue-400 font-medium">60-79: Recommended</div>
+                <div className="text-yellow-400 font-medium">40-59: Consider</div>
+                <div className="text-red-400 font-medium">0-39: Avoid</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Count Tree Grid */}
         <div className="relative bg-slate-700/20 rounded-lg p-6" style={{ minHeight: '700px' }}>
           <div className="absolute inset-0 p-6">
@@ -279,7 +306,7 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
                 <TableHeader>
                   <TableRow>
                     <TableHead className="text-slate-300">Pitch Type</TableHead>
-                    <TableHead className="text-slate-300">Score</TableHead>
+                    <TableHead className="text-slate-300">PER</TableHead>
                     <TableHead className="text-slate-300">Pitches</TableHead>
                     {selectedMetrics.map(metric => (
                       <TableHead key={metric} className="text-slate-300">
@@ -297,7 +324,7 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
                           {rec.pitch_type}
                         </TableCell>
                         <TableCell className="text-blue-400 font-semibold">
-                          {rec.score.toFixed(1)}
+                          {rec.score.toFixed(1)} ({getScoreLabel(rec.score)})
                         </TableCell>
                         <TableCell className="text-slate-300">
                           {rec.pitches}
@@ -316,18 +343,22 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
         )}
 
         {/* Legend */}
-        <div className="flex justify-center space-x-6 text-sm">
+        <div className="flex justify-center space-x-4 text-sm">
           <div className="flex items-center space-x-2">
             <div className="w-4 h-4 rounded-full bg-green-500" />
-            <span className="text-slate-300">Good (7.5+)</span>
+            <span className="text-slate-300">Strongly Recommend (80-100)</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="w-4 h-4 rounded-full bg-blue-500" />
+            <span className="text-slate-300">Recommended (60-79)</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-4 h-4 rounded-full bg-yellow-500" />
-            <span className="text-slate-300">Average (3.5-7.5)</span>
+            <span className="text-slate-300">Consider (40-59)</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-4 h-4 rounded-full bg-red-500" />
-            <span className="text-slate-300">Poor (&lt;3.5)</span>
+            <span className="text-slate-300">Avoid (0-39)</span>
           </div>
         </div>
       </div>

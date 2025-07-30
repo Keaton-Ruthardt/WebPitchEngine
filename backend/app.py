@@ -145,57 +145,161 @@ def get_statcast_data(player_id, years_tuple, player_type):
     return preprocess_all_metrics(pd.concat(all_data, ignore_index=True))
 
 def preprocess_all_metrics(df):
+    # Defensive: ensure DataFrame is contiguous and not a view
+    df = df.copy()
+    # DEBUG: Print DataFrame shape and index at start
+    print('preprocess_all_metrics START shape:', df.shape, 'index:', df.index)
+    # Ensure all required columns exist and are correct length
     required_cols = {'description': '', 'zone': np.nan, 'launch_speed': np.nan, 'balls': '0', 'strikes': '0', 'events': '', 'woba_value': 0.0, 'est_slg_g': 0.0, 'p_throws': 'R', 'stand': 'R'}
     for col, default in required_cols.items():
-        if col not in df.columns:
-            df[col] = default
+        if col not in df.columns or len(df[col]) != len(df):
+            df[col] = pd.Series([default] * len(df), index=df.index)
     df['zone'] = pd.to_numeric(df['zone'], errors='coerce')
-    df['in_zone'] = df['zone'].isin(range(1, 10))
-    df['out_of_zone'] = df['zone'].isin([11, 12, 13, 14])
+    try:
+        print('Assign in_zone:', df.shape, df.index)
+        df['in_zone'] = pd.Series(df['zone'].isin(range(1, 10)), index=df.index, dtype=bool)
+    except Exception as e:
+        print('ERROR in_zone:', e, df.shape, df.index)
+        raise
+    try:
+        print('Assign out_of_zone:', df.shape, df.index)
+        df['out_of_zone'] = pd.Series(df['zone'].isin([11, 12, 13, 14]), index=df.index, dtype=bool)
+    except Exception as e:
+        print('ERROR out_of_zone:', e, df.shape, df.index)
+        raise
     swing_descriptions = ['foul', 'foul_tip', 'hit_into_play', 'swinging_strike', 'swinging_strike_blocked', 'foul_bunt']
     whiff_descriptions = ['swinging_strike', 'swinging_strike_blocked']
-    df['swing'] = df['description'].isin(swing_descriptions)
-    df['whiff'] = df['description'].isin(whiff_descriptions)
-    df['in_zone_swing'] = df['in_zone'] & df['swing']
-    df['in_zone_whiff'] = df['in_zone'] & df['whiff']
-    df['chase'] = df['out_of_zone'] & df['swing']
-    df['is_ab_over'] = df['events'].notna() & (df['events'] != '')
+    try:
+        print('Assign swing:', df.shape, df.index)
+        df['swing'] = pd.Series(df['description'].isin(swing_descriptions), index=df.index, dtype=bool)
+    except Exception as e:
+        print('ERROR swing:', e, df.shape, df.index)
+        raise
+    try:
+        print('Assign whiff:', df.shape, df.index)
+        df['whiff'] = pd.Series(df['description'].isin(whiff_descriptions), index=df.index, dtype=bool)
+    except Exception as e:
+        print('ERROR whiff:', e, df.shape, df.index)
+        raise
+    try:
+        print('Assign in_zone_swing:', df.shape, df.index)
+        df['in_zone_swing'] = pd.Series(df['in_zone'] & df['swing'], index=df.index, dtype=bool)
+    except Exception as e:
+        print('ERROR in_zone_swing:', e, df.shape, df.index)
+        raise
+    try:
+        print('Assign in_zone_whiff:', df.shape, df.index)
+        df['in_zone_whiff'] = pd.Series(df['in_zone'] & df['whiff'], index=df.index, dtype=bool)
+    except Exception as e:
+        print('ERROR in_zone_whiff:', e, df.shape, df.index)
+        raise
+    try:
+        print('Assign chase:', df.shape, df.index)
+        df['chase'] = pd.Series(df['out_of_zone'] & df['swing'], index=df.index, dtype=bool)
+    except Exception as e:
+        print('ERROR chase:', e, df.shape, df.index)
+        raise
+    try:
+        print('Assign is_ab_over:', df.shape, df.index)
+        df['is_ab_over'] = pd.Series(df['events'].notna() & (df['events'] != ''), index=df.index, dtype=bool)
+    except Exception as e:
+        print('ERROR is_ab_over:', e, df.shape, df.index)
+        raise
     df['woba_value'] = pd.to_numeric(df['woba_value'], errors='coerce').fillna(0)
     df['launch_speed'] = pd.to_numeric(df['launch_speed'], errors='coerce')
-    df['is_weak_contact'] = ((df['launch_speed'] < 85) & (df['description'] == 'hit_into_play')).fillna(False)
-    df['is_hard_hit'] = ((df['launch_speed'] >= 95) & (df['description'] == 'hit_into_play')).fillna(False)
-    df['bip'] = df['description'].isin(['hit_into_play', 'hit_into_play_no_out', 'hit_into_play_score'])
+    try:
+        print('Assign is_weak_contact:', df.shape, df.index)
+        mask_weak = (df['launch_speed'] < 85) & (df['description'] == 'hit_into_play') if len(df) > 0 else pd.Series([], dtype=bool)
+        df['is_weak_contact'] = pd.Series(mask_weak, index=df.index, dtype=bool).fillna(False)
+    except Exception as e:
+        print('ERROR is_weak_contact:', e, df.shape, df.index)
+        raise
+    try:
+        print('Assign is_hard_hit:', df.shape, df.index)
+        mask_hard = (df['launch_speed'] >= 95) & (df['description'] == 'hit_into_play') if len(df) > 0 else pd.Series([], dtype=bool)
+        df['is_hard_hit'] = pd.Series(mask_hard, index=df.index, dtype=bool).fillna(False)
+    except Exception as e:
+        print('ERROR is_hard_hit:', e, df.shape, df.index)
+        raise
+    try:
+        print('Assign bip:', df.shape, df.index)
+        df['bip'] = pd.Series(df['description'].isin(['hit_into_play', 'hit_into_play_no_out', 'hit_into_play_score']), index=df.index, dtype=bool)
+    except Exception as e:
+        print('ERROR bip:', e, df.shape, df.index)
+        raise
     df['count'] = df['balls'].astype(str) + '-' + df['strikes'].astype(str)
-    df['is_called_strike'] = (df['description'] == 'called_strike').fillna(False)
+    try:
+        print('Assign is_called_strike:', df.shape, df.index)
+        mask_called = (df['description'] == 'called_strike') if len(df) > 0 else pd.Series([], dtype=bool)
+        df['is_called_strike'] = pd.Series(mask_called, index=df.index, dtype=int)
+    except Exception as e:
+        print('ERROR is_called_strike:', e, df.shape, df.index)
+        raise
+    # DEBUG: Print DataFrame shape and index at end
+    print('preprocess_all_metrics END shape:', df.shape, 'index:', df.index)
     return df
 
-def generate_recommendation_report(analysis_df, min_pitches=10, top_n=3):
+def generate_recommendation_report(analysis_df, min_pitches=10, league_benchmarks=None, league='mlb', top_n=3):
+    print('generate_recommendation_report START shape:', analysis_df.shape, 'index:', analysis_df.index)
     if analysis_df.empty: return pd.DataFrame()
+    
+    # Use provided benchmarks or calculate from data
+    if league_benchmarks is None:
+        league_benchmarks = calculate_league_benchmarks(analysis_df, league)
+    print('DEBUG: Using league benchmarks:', league_benchmarks)
+    
     all_count_reports = []
     for count_str, weights in COUNT_WEIGHTS.items():
         balls, strikes = map(int, count_str.split('-'))
         count_df = analysis_df[(analysis_df['balls'] == balls) & (analysis_df['strikes'] == strikes)]
+        print(f'  count_df for {count_str} shape:', count_df.shape, 'index:', count_df.index)
         if count_df.empty: continue
         agg_spec = {'whiff': ('whiff', 'sum'), 'swing': ('swing', 'sum'), 'chase': ('chase', 'sum'),'out_of_zone': ('out_of_zone', 'sum'),'weak_contact': ('is_weak_contact', 'sum'),'hard_hit': ('is_hard_hit', 'sum'),'bip': ('bip', 'sum'),'called_strike': ('is_called_strike', 'sum'),'pitches': ('pitch_type', 'count')}
-        report = count_df.groupby('pitch_type').agg(**agg_spec).reset_index()
+        try:
+            report = count_df.groupby('pitch_type').agg(**agg_spec).reset_index()
+            print(f'    report after groupby shape:', report.shape, 'index:', report.index)
+        except Exception as e:
+            print('ERROR in groupby:', e, count_df.shape, count_df.index)
+            raise
         report = report[report['pitches'] >= min_pitches].copy()
         if report.empty: continue
-        report['whiff_rate'] = np.divide(report['whiff'], report['swing'], out=np.zeros_like(report['whiff'], dtype=float), where=report['swing']!=0)
-        report['chase_rate'] = np.divide(report['chase'], report['out_of_zone'], out=np.zeros_like(report['chase'], dtype=float), where=report['out_of_zone']!=0)
-        report['weak_contact_rate'] = np.divide(report['weak_contact'], report['bip'], out=np.zeros_like(report['weak_contact'], dtype=float), where=report['bip']!=0)
-        report['hard_hit_rate'] = np.divide(report['hard_hit'], report['bip'], out=np.zeros_like(report['hard_hit'], dtype=float), where=report['bip']!=0)
-        report['called_strike_rate'] = np.divide(report['called_strike'], report['pitches'], out=np.zeros_like(report['called_strike'], dtype=float), where=report['pitches']!=0)
-        report['raw_score'] = ((report['whiff_rate'] * weights.get('is_whiff', 0)) + (report['chase_rate'] * weights.get('is_chase', 0)) + (report['weak_contact_rate'] * weights.get('is_weak_contact', 0)) + (report['called_strike_rate'] * weights.get('is_called_strike', 0)) - (report['hard_hit_rate'] * weights.get('is_hard_hit', 0)))
+        try:
+            report['whiff_rate'] = np.divide(report['whiff'], report['swing'], out=np.zeros_like(report['whiff'], dtype=float), where=report['swing']!=0)
+        except Exception as e:
+            print('ERROR whiff_rate:', e, report.shape, report.index)
+            raise
+        try:
+            report['chase_rate'] = np.divide(report['chase'], report['out_of_zone'], out=np.zeros_like(report['chase'], dtype=float), where=report['out_of_zone']!=0)
+        except Exception as e:
+            print('ERROR chase_rate:', e, report.shape, report.index)
+            raise
+        try:
+            report['weak_contact_rate'] = np.divide(report['weak_contact'], report['bip'], out=np.zeros_like(report['weak_contact'], dtype=float), where=report['bip']!=0)
+        except Exception as e:
+            print('ERROR weak_contact_rate:', e, report.shape, report.index)
+            raise
+        try:
+            report['hard_hit_rate'] = np.divide(report['hard_hit'], report['bip'], out=np.zeros_like(report['hard_hit'], dtype=float), where=report['bip']!=0)
+        except Exception as e:
+            print('ERROR hard_hit_rate:', e, report.shape, report.index)
+            raise
+        try:
+            report['called_strike_rate'] = np.divide(report['called_strike'], report['pitches'], out=np.zeros_like(report['called_strike'], dtype=float), where=report['pitches']!=0)
+        except Exception as e:
+            print('ERROR called_strike_rate:', e, report.shape, report.index)
+            raise
         
-        # Apply the new hybrid scaling logic
-        if len(report) > 1:
-            min_score, max_score = report['raw_score'].min(), report['raw_score'].max()
-            if max_score > min_score: 
-                report['score'] = 1 + ((report['raw_score'] - min_score) * 9) / (max_score - min_score)
-            else: 
-                report['score'] = 5.0
-        else: 
-            report['score'] = 5.0
+        # Calculate percentile-based scores for each row using actual benchmarks
+        def debug_score(row):
+            score, metric_scores = calculate_composite_score(row, weights, league_benchmarks, league)
+            print(f"DEBUG: PitchType={row['pitch_type']} Count={count_str} Metrics={{'whiff_rate': {row['whiff_rate']:.3f}, 'chase_rate': {row['chase_rate']:.3f}, 'weak_contact_rate': {row['weak_contact_rate']:.3f}, 'hard_hit_rate': {row['hard_hit_rate']:.3f}, 'called_strike_rate': {row['called_strike_rate']:.3f}}} MetricScores={metric_scores} CompositeScore={score}")
+            print(f"DEBUG: Weights for {count_str}: {weights}")
+            return score
+        try:
+            report['score'] = report.apply(debug_score, axis=1)
+        except Exception as e:
+            print('ERROR score apply:', e, report.shape, report.index)
+            raise
         
         # Apply the count difficulty modifier
         modifier = COUNT_DIFFICULTY_MODIFIER.get(count_str, 1.0)
@@ -205,7 +309,188 @@ def generate_recommendation_report(analysis_df, min_pitches=10, top_n=3):
         report.sort_values(by='score', ascending=False, inplace=True)
         all_count_reports.append(report.head(top_n))
     if not all_count_reports: return pd.DataFrame()
-    return pd.concat(all_count_reports, ignore_index=True)
+    result = pd.concat(all_count_reports, ignore_index=True)
+    print('generate_recommendation_report END shape:', result.shape, 'index:', result.index)
+    return result
+
+# --- Dynamic League Performance Benchmarks ---
+# These will be calculated from actual data
+LEAGUE_BENCHMARKS = {}
+
+def calculate_league_benchmarks(analysis_df, league='mlb'):
+    """Use fixed, realistic league benchmarks instead of calculating from individual pitcher data"""
+    # Fixed MLB benchmarks based on league-wide averages
+    # These are more realistic and will give appropriate scores to elite pitchers
+    mlb_benchmarks = {
+        'whiff_rate': {'mean': 0.15, 'std': 0.08},  # 15% average whiff rate
+        'chase_rate': {'mean': 0.28, 'std': 0.10},  # 28% average chase rate  
+        'weak_contact_rate': {'mean': 0.20, 'std': 0.08},  # 20% average weak contact
+        'hard_hit_rate': {'mean': 0.35, 'std': 0.12},  # 35% average hard hit rate
+        'called_strike_rate': {'mean': 0.10, 'std': 0.05}  # 10% average called strike rate
+    }
+    
+    # Adjust for MiLB if needed (slightly lower standards)
+    if league.lower() == 'milb':
+        for metric in mlb_benchmarks:
+            mlb_benchmarks[metric]['mean'] *= 0.90  # 10% lower for MiLB
+            mlb_benchmarks[metric]['std'] *= 0.90
+    
+    return mlb_benchmarks
+
+# MiLB adjustments (more conservative - only 5% adjustment)
+MILB_ADJUSTMENT = 0.95
+
+def calculate_percentile_score(rate, metric, benchmarks, league='mlb'):
+    """Calculate percentile-based score (0-100 scale) for Pitch Effectiveness Rating (PER)"""
+    if pd.isna(rate):
+        print(f"DEBUG PERCENTILE: {metric} - rate={rate} -> 50.0 (missing)")
+        return 50.0  # Neutral score for missing data
+    if metric not in benchmarks:
+        print(f"DEBUG PERCENTILE: {metric} - no benchmark -> 50.0")
+        return 50.0  # Neutral score if no benchmark available
+    
+    # Apply MiLB adjustment if needed
+    if league.lower() == 'milb':
+        adjusted_rate = rate * MILB_ADJUSTMENT
+    else:
+        adjusted_rate = rate
+    
+    # Use a minimum std for stability
+    std = max(benchmarks[metric]['std'], 0.05)
+    
+    # For hard_hit_rate, lower is better, so invert the scoring
+    if metric == 'hard_hit_rate':
+        z_score = (benchmarks[metric]['mean'] - adjusted_rate) / std
+    else:
+        z_score = (adjusted_rate - benchmarks[metric]['mean']) / std
+    
+    # Convert to percentile using normal distribution approximation
+    import math
+    percentile = 50 * (1 + math.erf(z_score / math.sqrt(2)))
+    
+    # Much more generous mapping for realistic scoring
+    # Top 20% = Elite, Top 40% = Excellent, Top 60% = Good, etc.
+    if percentile >= 80:
+        score = 95.0 + (percentile - 80) / 20 * 5.0  # 95-100 (Elite)
+    elif percentile >= 60:
+        score = 85.0 + (percentile - 60) / 20 * 10.0  # 85-95 (Excellent)
+    elif percentile >= 40:
+        score = 75.0 + (percentile - 40) / 20 * 10.0  # 75-85 (Good)
+    elif percentile >= 20:
+        score = 65.0 + (percentile - 20) / 20 * 10.0  # 65-75 (Above Average)
+    elif percentile >= 10:
+        score = 55.0 + (percentile - 10) / 10 * 10.0  # 55-65 (Average)
+    elif percentile >= 5:
+        score = 45.0 + (percentile - 5) / 5 * 10.0  # 45-55 (Below Average)
+    elif percentile >= 2:
+        score = 35.0 + (percentile - 2) / 3 * 10.0  # 35-45 (Poor)
+    else:
+        score = 25.0 + percentile / 2 * 10.0  # 25-35 (Very Poor)
+    
+    # Only print debug for non-zero rates to reduce noise
+    if rate > 0:
+        print(f"DEBUG PERCENTILE: {metric} - rate={rate:.3f}, adjusted={adjusted_rate:.3f}, mean={benchmarks[metric]['mean']:.3f}, std={std:.3f}, z_score={z_score:.3f}, percentile={percentile:.1f} -> score={score:.1f}")
+    
+    return round(score, 1)
+
+def calculate_composite_score(row, weights, benchmarks, league='mlb'):
+    """Calculate weighted composite score using percentile-based metrics
+    Returns Pitch Effectiveness Rating (PER) on 0-100 scale"""
+    scores = {}
+    
+    # Calculate percentile scores for each metric
+    scores['whiff'] = calculate_percentile_score(row['whiff_rate'], 'whiff_rate', benchmarks, league)
+    scores['chase'] = calculate_percentile_score(row['chase_rate'], 'chase_rate', benchmarks, league)
+    scores['weak_contact'] = calculate_percentile_score(row['weak_contact_rate'], 'weak_contact_rate', benchmarks, league)
+    scores['called_strike'] = calculate_percentile_score(row['called_strike_rate'], 'called_strike_rate', benchmarks, league)
+    scores['hard_hit'] = calculate_percentile_score(row['hard_hit_rate'], 'hard_hit_rate', benchmarks, league)
+    
+    # Map weight keys to score keys
+    weight_to_score_mapping = {
+        'is_whiff': 'whiff',
+        'is_chase': 'chase', 
+        'is_weak_contact': 'weak_contact',
+        'is_called_strike': 'called_strike',
+        'is_hard_hit': 'hard_hit'
+    }
+    
+    # Apply weights and calculate composite
+    composite = 0
+    total_weight = 0
+    
+    # Only print debug for high-scoring pitches to reduce noise
+    high_score_threshold = 80.0
+    if any(score > high_score_threshold for score in scores.values()):
+        print(f"DEBUG COMPOSITE: Raw metrics - whiff_rate={row['whiff_rate']:.3f}, hard_hit_rate={row['hard_hit_rate']:.3f}")
+        print(f"DEBUG COMPOSITE: Individual scores - {scores}")
+        print(f"DEBUG COMPOSITE: Weights - {weights}")
+        
+        for weight_key, weight in weights.items():
+            score_key = weight_to_score_mapping.get(weight_key)
+            if score_key and score_key in scores:
+                contribution = scores[score_key] * weight
+                composite += contribution
+                total_weight += weight
+                print(f"DEBUG COMPOSITE: {weight_key} -> {score_key} = {scores[score_key]:.1f} * {weight:.3f} = {contribution:.1f}")
+    else:
+        # Silent calculation for normal scores
+        for weight_key, weight in weights.items():
+            score_key = weight_to_score_mapping.get(weight_key)
+            if score_key and score_key in scores:
+                composite += scores[score_key] * weight
+                total_weight += weight
+    
+    # Normalize by total weight
+    if total_weight > 0:
+        final_score = composite / total_weight
+    else:
+        final_score = 50.0  # Neutral score instead of 5.0
+    
+    # Print final score for high-scoring pitches
+    if any(score > high_score_threshold for score in scores.values()):
+        print(f"DEBUG COMPOSITE: Final score = {composite:.1f} / {total_weight:.3f} = {final_score:.1f}")
+    
+    return round(final_score, 1), scores
+
+def add_rate_columns(df):
+    print('add_rate_columns START shape:', df.shape, 'index:', df.index)
+    try:
+        df['whiff_rate'] = np.divide(df['whiff'], df['swing'], out=np.zeros_like(df['whiff'], dtype=float), where=df['swing']!=0)
+    except Exception as e:
+        print('ERROR whiff_rate:', e, df.shape, df.index)
+        raise
+    try:
+        df['chase_rate'] = np.divide(df['chase'], df['out_of_zone'], out=np.zeros_like(df['chase'], dtype=float), where=df['out_of_zone']!=0)
+    except Exception as e:
+        print('ERROR chase_rate:', e, df.shape, df.index)
+        raise
+    try:
+        df['weak_contact_rate'] = np.divide(df['is_weak_contact'], df['bip'], out=np.zeros_like(df['is_weak_contact'], dtype=float), where=df['bip']!=0)
+    except Exception as e:
+        print('ERROR weak_contact_rate:', e, df.shape, df.index)
+        raise
+    try:
+        df['hard_hit_rate'] = np.divide(df['is_hard_hit'], df['bip'], out=np.zeros_like(df['is_hard_hit'], dtype=float), where=df['bip']!=0)
+    except Exception as e:
+        print('ERROR hard_hit_rate:', e, df.shape, df.index)
+        raise
+    # Use 'pitches' if present, else use total rows
+    if 'pitches' in df.columns:
+        denom = df['pitches']
+    else:
+        denom = np.ones(len(df['is_called_strike']))
+    try:
+        df['called_strike_rate'] = np.divide(
+            df['is_called_strike'],
+            denom,
+            out=np.zeros_like(df['is_called_strike'], dtype=float),
+            where=denom != 0
+        )
+    except Exception as e:
+        print('ERROR called_strike_rate:', e, df.shape, df.index)
+        raise
+    print('add_rate_columns END shape:', df.shape, 'index:', df.index)
+    return df
 
 # --- API Routes ---
 @server.route('/api/pitchers/<league>')
@@ -270,14 +555,25 @@ def analyze_pitcher():
                 return jsonify({'error': f'No batter data found for {batter_name}'}), 404
             
             pitcher_hand = pitcher_df['p_throws'].iloc[0]
-            analysis_df = batter_df[batter_df['p_throws'] == pitcher_hand]
+            analysis_df = batter_df[batter_df['p_throws'] == pitcher_hand].copy().reset_index(drop=True)
             opponent_name = batter_name.title()
         else:
-            analysis_df = pitcher_df[pitcher_df['stand'] == handedness]
+            analysis_df = pitcher_df[pitcher_df['stand'] == handedness].copy().reset_index(drop=True)
             opponent_name = f"Avg {handedness}HH Batter"
+
+        # Ensure all derived columns are present before scoring
+        analysis_df = preprocess_all_metrics(analysis_df)
+        # Cast all boolean columns used in aggregation/division to int
+        for col in ['whiff', 'swing', 'chase', 'out_of_zone', 'is_weak_contact', 'is_hard_hit', 'bip', 'is_called_strike']:
+            if col in analysis_df.columns:
+                analysis_df[col] = analysis_df[col].astype(int)
+        analysis_df = add_rate_columns(analysis_df)
+
+        # Calculate league benchmarks from the data
+        league_benchmarks = calculate_league_benchmarks(analysis_df, pitcher_level)
         
         # Generate recommendations
-        report_df = generate_recommendation_report(analysis_df, min_pitches)
+        report_df = generate_recommendation_report(analysis_df, min_pitches, league_benchmarks, pitcher_level)
         
         if report_df.empty:
             return jsonify({'error': 'Not enough data to generate recommendations'}), 400

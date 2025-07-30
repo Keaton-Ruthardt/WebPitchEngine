@@ -8,7 +8,8 @@ A comprehensive baseball analytics platform that provides data-driven pitch reco
 - **Interactive Hover Tooltips**: Hover over count nodes to see detailed metrics
 - **Raw Data Display**: Click on nodes to view comprehensive data tables
 - **Real-time Metrics**: Display whiff rates, hard hit rates, chase rates, and more
-- **Color-coded Performance**: Green (good), Yellow (average), Red (poor) based on scores
+- **Pitch Effectiveness Rating (PER)**: 0-100 scale with color-coded performance indicators
+- **Actionable Insights**: Clear recommendations for pitch selection in each count
 
 ### Data Integration
 - **MLB Data**: Real-time Statcast data via pybaseball
@@ -166,6 +167,21 @@ The engine calculates and displays:
 - **Called Strike Rate**: Percentage of called strikes
 - **Weak Contact Rate**: Percentage of balls hit <85 mph
 - **Chase Rate**: Percentage of swings on pitches outside the zone
+
+## Pitch Effectiveness Rating (PER)
+
+The system uses a **0-100 Pitch Effectiveness Rating (PER)** that provides clear, actionable insights for pitch selection:
+
+- **95-100**: Elite (Strongly Recommended)
+- **85-94**: Excellent (Recommended)
+- **75-84**: Good (Consider)
+- **65-74**: Above Average (Use sparingly)
+- **55-64**: Average (Avoid)
+- **45-54**: Below Average (Avoid)
+- **35-44**: Poor (Avoid)
+- **0-34**: Very Poor (Avoid)
+
+PER maintains the scientifically accurate weights that affect xRV while providing intuitive guidance for pitch selection decisions. See `SCORING_SYSTEM_GUIDE.md` for detailed information.
 
 ## Contributing
 

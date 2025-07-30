@@ -121,21 +121,22 @@ const Index = () => {
             </div>
             <div>
               <h4 className="text-lg font-semibold text-white mb-4">Contact Info</h4>
-              <p className="text-slate-300 mb-2">Phoenix, Arizona</p>
-              <p className="text-slate-300 mb-2">info@pushperformanceaz.com</p>
-              <p className="text-slate-300">(555) 123-4567</p>
+              <p className="text-slate-300 mb-2">Tempe, AZ</p>
+              <p className="text-slate-300 mb-2">pushperformanceaz9@gmail.com</p>
+              <p className="text-slate-300">(480) 645-5650</p>
             </div>
             <div>
               <h4 className="text-lg font-semibold text-white mb-4">Follow Us</h4>
               <div className="flex space-x-4 justify-center md:justify-start">
-                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
-                  Twitter
+                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white" asChild>
+                  <a href="https://x.com/PUSHbsbl" target="_blank" rel="noopener noreferrer">
+                    X
+                  </a>
                 </Button>
-                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
-                  LinkedIn
-                </Button>
-                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
-                  Instagram
+                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white" asChild>
+                  <a href="https://www.instagram.com/pushperformanceaz" target="_blank" rel="noopener noreferrer">
+                    Instagram
+                  </a>
                 </Button>
               </div>
             </div>

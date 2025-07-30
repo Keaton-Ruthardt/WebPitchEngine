@@ -8,7 +8,6 @@ import YearSelection from "./filters/YearSelection";
 import PitcherSelection from "./filters/PitcherSelection";
 import OpponentSelection from "./filters/OpponentSelection";
 import MetricsSelection from "./filters/MetricsSelection";
-import MiLBUpload from "./MiLBUpload";
 import { apiService } from "@/services/api";
 
 interface FilterPanelProps {
@@ -135,13 +134,7 @@ const FilterPanel = ({ filters, setFilters, onGenerateReport, isGenerating }: Fi
         </CardContent>
       </Card>
 
-      {/* MiLB Upload Section - Only show for MiLB pitchers */}
-      {filters.leagueSelection.league === 'milb' && filters.pitcherSelection.pitcher && selectedPitcherName && (
-        <MiLBUpload
-          pitcherId={filters.pitcherSelection.pitcher}
-          pitcherName={selectedPitcherName}
-        />
-      )}
+
     </div>
   );
 };

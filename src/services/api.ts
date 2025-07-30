@@ -19,7 +19,7 @@ export interface AnalysisRequest {
 export interface PitchRecommendation {
   pitch_type: string;
   count: string;
-  score: number;
+  score: number; // This is now the Pitch Effectiveness Rating (PER) 0-100
   pitches: number;
   whiff_rate: number;
   hard_hit_rate: number;

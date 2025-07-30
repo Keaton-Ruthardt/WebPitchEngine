@@ -38,9 +38,9 @@ const OpponentSelection = ({
         <div>
           <Label className="text-slate-300 mb-3 block">Opponent Type</Label>
           <RadioGroup value={opponentType} onValueChange={onOpponentTypeChange} className="space-y-2">
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="specific" id="specific" className="border-slate-500" />
-              <Label htmlFor="specific" className="text-slate-300">Specific Batter</Label>
+            <div className="flex items-center space-x-2 opacity-50 cursor-not-allowed">
+              <RadioGroupItem value="specific" id="specific" className="border-slate-500" disabled />
+              <Label htmlFor="specific" className="text-slate-300">Specific Batter <span className="text-sm text-slate-400">(Coming Soon)</span></Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="average" id="average" className="border-slate-500" />
