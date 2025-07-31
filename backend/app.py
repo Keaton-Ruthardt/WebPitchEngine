@@ -650,6 +650,11 @@ def upload_milb_data():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@server.route('/')
+def root():
+    """Root endpoint"""
+    return jsonify({'message': 'WebPitchEngine API is running', 'status': 'healthy', 'endpoints': ['/api/health', '/api/pitchers/<league>', '/api/analyze', '/api/upload-milb']})
+
 @server.route('/api/health')
 def health_check():
     """Health check endpoint"""
