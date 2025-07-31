@@ -27,7 +27,7 @@ const Analytics = () => {
       hotZoneMetric: "woba"
     },
     metricsSelection: {
-      selectedMetrics: ["whiff_rate", "hard_hit_rate"],
+      selectedMetrics: ["whiff_rate", "hard_hit_rate", "called_strike_rate", "weak_contact_rate", "chase_rate"],
       minPitches: 10
     }
   });
