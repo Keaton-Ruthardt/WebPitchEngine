@@ -35,7 +35,7 @@ server.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 os.makedirs(server.config['UPLOAD_FOLDER'], exist_ok=True)
 
 CORS(server)
-CORS(server, origins=["https://your-frontend-service.onrender.com"])
+CORS(server, origins=["https://webpitchengine-frontend.onrender.com"])
 
 class User(UserMixin):
     def __init__(self, id, username):

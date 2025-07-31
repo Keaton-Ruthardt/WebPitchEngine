@@ -1,5 +1,5 @@
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://your-backend-url.vercel.app/api'  // Replace with your actual backend URL
+  ? 'https://webpitchengine-backend.onrender.com/api'
   : 'http://localhost:5000/api';
 
 export interface PitcherOption {
