@@ -13,6 +13,9 @@ from flask_cors import CORS
 import json
 import numpy as np
 from werkzeug.utils import secure_filename
+import threading
+import time
+import requests
 
 # Import pybaseball functions
 try:
@@ -660,6 +663,27 @@ def health_check():
     """Health check endpoint"""
     return jsonify({'status': 'healthy', 'pybaseball_available': PYBASEBALL_AVAILABLE})
 
+def keep_alive():
+    """Keep the server alive by pinging itself every 10 minutes"""
+    def ping_self():
+        while True:
+            try:
+                # Wait 10 minutes (600 seconds)
+                time.sleep(600)
+                # Get the current URL from environment or use localhost for local testing
+                base_url = os.environ.get('RENDER_EXTERNAL_URL', 'http://localhost:5000')
+                response = requests.get(f'{base_url}/api/health', timeout=30)
+                print(f"Keep-alive ping: {response.status_code}")
+            except Exception as e:
+                print(f"Keep-alive ping failed: {e}")
+    
+    # Start the ping thread
+    ping_thread = threading.Thread(target=ping_self, daemon=True)
+    ping_thread.start()
+
 if __name__ == '__main__':
+    # Start keep-alive service
+    keep_alive()
+    
     port = int(os.environ.get('PORT', 5000))
     server.run(debug=False, host='0.0.0.0', port=port) 
