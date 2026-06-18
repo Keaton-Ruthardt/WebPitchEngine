@@ -1,6 +1,5 @@
 
 import { useEffect, useState } from "react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
@@ -176,9 +175,8 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
   }
 
   return (
-    <TooltipProvider>
-      <div className="space-y-6">
-        {/* Pitch Effectiveness Rating (PER) Description */}
+    <div className="space-y-6">
+      {/* Pitch Effectiveness Rating (PER) Description */}
         <Card className="bg-white border-[#E7E2D6] rounded-[14px] shadow-[0_2px_10px_rgba(40,38,30,0.04)]">
           <CardContent className="pt-6">
             <div className="text-center space-y-2">
@@ -261,40 +259,35 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
                 const topScore = pitchRecommendations[0]?.score || 0;
                 const color = getNodeColor(topScore);
                 
+                const isSelected = selectedCount === count;
                 return (
-                  <Tooltip key={count}>
-                    <TooltipTrigger asChild>
-                      <g
-                        className="cursor-pointer focus:outline-none focus-visible:outline-none [&:focus]:outline-none"
-                        style={{ outline: 'none' }}
-                        onClick={() => setSelectedCount(selectedCount === count ? null : count)}
-                      >
-                        <circle
-                          cx={x}
-                          cy={y}
-                          r="0.4"
-                          fill={color}
-                          stroke="#fff"
-                          strokeWidth="0.05"
-                          className="hover:opacity-80 transition-opacity"
-                        />
-                        <text
-                          x={x}
-                          y={y + 0.1}
-                          textAnchor="middle"
-                          fill="white"
-                          fontSize="0.3"
-                          fontWeight="bold"
-                          pointerEvents="none"
-                        >
-                          {count}
-                        </text>
-                      </g>
-                    </TooltipTrigger>
-                    <TooltipContent side="top" className="max-w-sm">
-                      {createHoverContent({ count, pitchRecommendations })}
-                    </TooltipContent>
-                  </Tooltip>
+                  <g
+                    key={count}
+                    className="cursor-pointer focus:outline-none"
+                    style={{ outline: 'none' }}
+                    onClick={() => setSelectedCount(isSelected ? null : count)}
+                  >
+                    <circle
+                      cx={x}
+                      cy={y}
+                      r="0.4"
+                      fill={color}
+                      stroke={isSelected ? '#1A1915' : '#fff'}
+                      strokeWidth={isSelected ? '0.08' : '0.05'}
+                      className="hover:opacity-80 transition-opacity"
+                    />
+                    <text
+                      x={x}
+                      y={y + 0.1}
+                      textAnchor="middle"
+                      fill="white"
+                      fontSize="0.3"
+                      fontWeight="bold"
+                      pointerEvents="none"
+                    >
+                      {count}
+                    </text>
+                  </g>
                 );
               })}
             </svg>
@@ -370,7 +363,6 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
           </div>
         </div>
       </div>
-    </TooltipProvider>
   );
 };
 
