@@ -107,10 +107,10 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
   }, [reportData]);
 
   const getNodeColor = (topScore: number) => {
-    if (topScore >= 80) return '#28a745'; // Green - Strongly Recommended
-    if (topScore >= 60) return '#17a2b8'; // Blue - Recommended
-    if (topScore >= 40) return '#ffc107'; // Yellow - Consider
-    return '#dc3545'; // Red - Avoid
+    if (topScore >= 80) return '#5F8C6B'; // Green - Strongly Recommended
+    if (topScore >= 60) return '#5E89A0'; // Blue - Recommended
+    if (topScore >= 40) return '#C0954F'; // Yellow - Consider
+    return '#B2604A'; // Red - Avoid
   };
 
   const getScoreLabel = (score: number) => {
@@ -138,22 +138,22 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
   const createHoverContent = (countData: CountTreeData) => {
     return (
       <div className="p-2 space-y-2">
-        <div className="font-semibold text-white border-b border-slate-600 pb-1">
+        <div className="font-semibold text-[#1A1915] border-b border-[#E7E2D6] pb-1">
           Count: {countData.count}
         </div>
         <div className="text-sm space-y-1">
           {countData.pitchRecommendations.slice(0, 3).map((rec, index) => (
-            <div key={index} className={`border-l-2 pl-2 ${index === 0 ? 'border-green-400' : 'border-blue-400'}`}>
-              <div className={`font-medium ${index === 0 ? 'text-green-300' : 'text-blue-300'}`}>
+            <div key={index} className={`border-l-2 pl-2 ${index === 0 ? 'border-[#5F8C6B]' : 'border-[#5E89A0]'}`}>
+              <div className={`font-medium ${index === 0 ? 'text-[#5F8C6B]' : 'text-[#5E89A0]'}`}>
                 {rec.pitch_type} {index === 0 && '(Best)'}
               </div>
-              <div className="text-xs text-slate-300">
+              <div className="text-xs text-[#57544B]">
                 PER: {rec.score.toFixed(1)} ({getScoreLabel(rec.score)})
               </div>
               {selectedMetrics.map(metric => {
                 if (rec[metric] !== undefined) {
                   return (
-                    <div key={metric} className="text-xs text-slate-300">
+                    <div key={metric} className="text-xs text-[#57544B]">
                       {metricDisplayMap[metric]}: {formatMetricValue(rec[metric], metric)}
                     </div>
                   );
@@ -170,7 +170,7 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
   if (processedData.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-slate-400">No count data available for visualization</p>
+        <p className="text-[#6E6B61]">No count data available for visualization</p>
       </div>
     );
   }
@@ -179,26 +179,26 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
     <TooltipProvider>
       <div className="space-y-6">
         {/* Pitch Effectiveness Rating (PER) Description */}
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className="bg-white border-[#E7E2D6] rounded-[14px] shadow-[0_2px_10px_rgba(40,38,30,0.04)]">
           <CardContent className="pt-6">
             <div className="text-center space-y-2">
-              <h3 className="text-lg font-semibold text-white">Pitch Effectiveness Rating (PER)</h3>
-              <p className="text-slate-300 text-sm">
+              <h3 className="text-lg font-semibold text-[#1A1915]">Pitch Effectiveness Rating (PER)</h3>
+              <p className="text-[#57544B] text-sm">
                 Scores range from 0-100, indicating how effective each pitch type is for specific counts. 
                 Higher scores suggest better pitch selection for that situation.
               </p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 text-xs">
-                <div className="text-green-400 font-medium">80-100: Strongly Recommend</div>
-                <div className="text-blue-400 font-medium">60-79: Recommended</div>
-                <div className="text-yellow-400 font-medium">40-59: Consider</div>
-                <div className="text-red-400 font-medium">0-39: Avoid</div>
+                <div className="text-[#5F8C6B] font-medium">80-100: Strongly Recommend</div>
+                <div className="text-[#5E89A0] font-medium">60-79: Recommended</div>
+                <div className="text-[#C0954F] font-medium">40-59: Consider</div>
+                <div className="text-[#B2604A] font-medium">0-39: Avoid</div>
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Count Tree Grid */}
-        <div className="relative bg-slate-700/20 rounded-lg p-6" style={{ minHeight: '700px' }}>
+        <div className="relative bg-[#FBFAF6] border border-[#ECE7DC] rounded-lg p-6" style={{ minHeight: '700px' }}>
           <div className="absolute inset-0 p-6">
             <svg viewBox="-5 -1 10 9" className="w-full h-full">
               {/* Draw connections between counts */}
@@ -219,7 +219,7 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
                         y1={y}
                         x2={nextX}
                         y2={nextY}
-                        stroke="#30363d"
+                        stroke="#DCD5C6"
                         strokeWidth="0.1"
                       />
                     );
@@ -238,7 +238,7 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
                         y1={y}
                         x2={nextX}
                         y2={nextY}
-                        stroke="#30363d"
+                        stroke="#DCD5C6"
                         strokeWidth="0.1"
                       />
                     );
@@ -295,9 +295,9 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
 
         {/* Raw Data Table */}
         {selectedCount && (
-          <Card className="bg-slate-800/50 border-slate-700">
+          <Card className="bg-white border-[#E7E2D6] rounded-[14px] shadow-[0_2px_10px_rgba(40,38,30,0.04)]">
             <CardHeader>
-              <CardTitle className="text-white">
+              <CardTitle className="text-[#1A1915]">
                 Raw Data for Count: {selectedCount}
               </CardTitle>
             </CardHeader>
@@ -305,11 +305,11 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="text-slate-300">Pitch Type</TableHead>
-                    <TableHead className="text-slate-300">PER</TableHead>
-                    <TableHead className="text-slate-300">Pitches</TableHead>
+                    <TableHead className="text-[#57544B]">Pitch Type</TableHead>
+                    <TableHead className="text-[#57544B]">PER</TableHead>
+                    <TableHead className="text-[#57544B]">Pitches</TableHead>
                     {selectedMetrics.map(metric => (
-                      <TableHead key={metric} className="text-slate-300">
+                      <TableHead key={metric} className="text-[#57544B]">
                         {metricDisplayMap[metric]}
                       </TableHead>
                     ))}
@@ -320,17 +320,17 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
                     .find(d => d.count === selectedCount)
                     ?.pitchRecommendations.map((rec, index) => (
                       <TableRow key={index}>
-                        <TableCell className="text-white font-medium">
+                        <TableCell className="text-[#1A1915] font-medium">
                           {rec.pitch_type}
                         </TableCell>
-                        <TableCell className="text-blue-400 font-semibold">
+                        <TableCell className="text-[#5E89A0] font-semibold">
                           {rec.score.toFixed(1)} ({getScoreLabel(rec.score)})
                         </TableCell>
-                        <TableCell className="text-slate-300">
+                        <TableCell className="text-[#57544B]">
                           {rec.pitches}
                         </TableCell>
                         {selectedMetrics.map(metric => (
-                          <TableCell key={metric} className="text-slate-300">
+                          <TableCell key={metric} className="text-[#57544B]">
                             {rec[metric] !== undefined ? formatMetricValue(rec[metric], metric) : 'N/A'}
                           </TableCell>
                         ))}
@@ -345,20 +345,20 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
         {/* Legend */}
         <div className="flex justify-center space-x-4 text-sm">
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded-full bg-green-500" />
-            <span className="text-slate-300">Strongly Recommend (80-100)</span>
+            <div className="w-4 h-4 rounded-full bg-[#5F8C6B]" />
+            <span className="text-[#57544B]">Strongly Recommend (80-100)</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded-full bg-blue-500" />
-            <span className="text-slate-300">Recommended (60-79)</span>
+            <div className="w-4 h-4 rounded-full bg-[#5E89A0]" />
+            <span className="text-[#57544B]">Recommended (60-79)</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded-full bg-yellow-500" />
-            <span className="text-slate-300">Consider (40-59)</span>
+            <div className="w-4 h-4 rounded-full bg-[#C0954F]" />
+            <span className="text-[#57544B]">Consider (40-59)</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 rounded-full bg-red-500" />
-            <span className="text-slate-300">Avoid (0-39)</span>
+            <div className="w-4 h-4 rounded-full bg-[#B2604A]" />
+            <span className="text-[#57544B]">Avoid (0-39)</span>
           </div>
         </div>
       </div>

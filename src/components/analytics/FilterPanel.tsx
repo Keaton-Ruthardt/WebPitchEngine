@@ -78,11 +78,11 @@ const FilterPanel = ({ filters, setFilters, onGenerateReport, isGenerating }: Fi
 
   return (
     <div className="space-y-6">
-      <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
+      <Card className="bg-white border-[#E7E2D6] rounded-[14px] shadow-[0_2px_10px_rgba(40,38,30,0.04)]">
         <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
-            <BarChart3 className="h-5 w-5" />
-            Pitch Recommendation Engine
+          <CardTitle className="text-[#1A1915] flex items-center gap-2 text-[17px] font-semibold">
+            <BarChart3 className="h-[18px] w-[18px] text-[#C26F4F]" />
+            Configure Report
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-8">
@@ -122,13 +122,13 @@ const FilterPanel = ({ filters, setFilters, onGenerateReport, isGenerating }: Fi
             onMinPitchesChange={(value) => updateFilter("metricsSelection", "minPitches", value)}
           />
 
-          <div className="pt-6 border-t border-slate-600">
-            <Button 
+          <div className="pt-5 border-t border-[#ECE7DC]">
+            <Button
               onClick={onGenerateReport}
               disabled={isGenerating}
-              className="w-full bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 text-white py-3 text-lg font-semibold"
+              className="w-full bg-[#C26F4F] hover:bg-[#A85638] disabled:bg-[#C9BBA9] text-white py-3 text-base font-semibold h-auto rounded-[9px]"
             >
-              {isGenerating ? "Generating Report..." : "Generate Pitch Report"}
+              {isGenerating ? "Generating report…" : "Generate Pitch Report"}
             </Button>
           </div>
         </CardContent>

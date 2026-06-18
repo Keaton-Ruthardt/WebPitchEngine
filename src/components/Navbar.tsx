@@ -1,52 +1,50 @@
 
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
-import { BarChart3 } from "lucide-react";
 
 const Navbar = () => {
   const location = useLocation();
-  
+
+  const navLinkClass = (active: boolean) =>
+    `text-[15px] font-medium transition-colors ${
+      active ? "text-[#C26F4F]" : "text-[#57544B] hover:text-[#1A1915]"
+    }`;
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-sm border-b border-slate-700">
-      <div className="max-w-6xl mx-auto px-4 py-4">
-        <div className="relative flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 z-10">
-            <div className="bg-gradient-to-r from-blue-600 to-emerald-600 p-2 rounded-lg">
-              <BarChart3 className="h-6 w-6 text-white" />
-            </div>
-            <span className="text-xl font-bold text-white">Push Performance AZ</span>
+    <nav className="sticky top-0 left-0 right-0 z-40 bg-[#F5F4EE]/[0.82] backdrop-blur-md border-b border-[#E7E2D6]">
+      <div className="max-w-[1160px] mx-auto px-7 py-3.5 flex items-center justify-between gap-6">
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-3">
+          <img
+            src="/push-performance-logo.png"
+            alt="Push Performance"
+            className="h-9 w-auto block"
+          />
+          <span className="font-display text-[19px] font-semibold tracking-[-0.01em] text-[#1A1915]">
+            Push Performance AZ
+          </span>
+        </Link>
+
+        {/* Center nav */}
+        <div className="hidden md:flex items-center gap-9">
+          <Link to="/" className={navLinkClass(location.pathname === "/")}>
+            Home
           </Link>
-
-          {/* Navigation Links - Centered */}
-          <div className="hidden md:flex items-center space-x-8 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <Link 
-              to="/" 
-              className={`text-lg font-medium transition-colors ${
-                location.pathname === "/" 
-                  ? "text-blue-400" 
-                  : "text-slate-300 hover:text-white"
-              }`}
-            >
-              Home
-            </Link>
-            <Link 
-              to="/analytics" 
-              className={`text-lg font-medium transition-colors ${
-                location.pathname === "/analytics" 
-                  ? "text-blue-400" 
-                  : "text-slate-300 hover:text-white"
-              }`}
-            >
-              Analytics
-            </Link>
-          </div>
-
-          {/* Login Button */}
-          <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white z-10">
-            <Link to="/login">Login</Link>
-          </Button>
+          <Link
+            to="/analytics"
+            className={navLinkClass(location.pathname === "/analytics")}
+          >
+            Analytics
+          </Link>
         </div>
+
+        {/* Login */}
+        <Button
+          asChild
+          className="bg-[#C26F4F] hover:bg-[#A85638] text-white rounded-lg px-[18px] py-[9px] text-sm font-semibold h-auto"
+        >
+          <Link to="/login">Login</Link>
+        </Button>
       </div>
     </nav>
   );

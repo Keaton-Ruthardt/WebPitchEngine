@@ -29,22 +29,22 @@ const OpponentSelection = ({
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <div className="bg-orange-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">4</div>
-        <h3 className="text-lg font-semibold text-white">Opponent Selection</h3>
-        <Activity className="h-4 w-4 text-orange-400" />
+        <div className="bg-[#F3ECE5] text-[#C26F4F] rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold">4</div>
+        <h3 className="text-lg font-semibold text-[#1A1915]">Opponent Selection</h3>
+        <Activity className="h-4 w-4 text-[#C26F4F]" />
       </div>
       
       <div className="ml-10 space-y-4">
         <div>
-          <Label className="text-slate-300 mb-3 block">Opponent Type</Label>
+          <Label className="text-[#57544B] mb-3 block">Opponent Type</Label>
           <RadioGroup value={opponentType} onValueChange={onOpponentTypeChange} className="space-y-2">
             <div className="flex items-center space-x-2 opacity-50 cursor-not-allowed">
-              <RadioGroupItem value="specific" id="specific" className="border-slate-500" disabled />
-              <Label htmlFor="specific" className="text-slate-300">Specific Batter <span className="text-sm text-slate-400">(Coming Soon)</span></Label>
+              <RadioGroupItem value="specific" id="specific" className="border-[#C26F4F]" disabled />
+              <Label htmlFor="specific" className="text-[#57544B]">Specific Batter <span className="text-sm text-[#6E6B61]">(Coming Soon)</span></Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="average" id="average" className="border-slate-500" />
-              <Label htmlFor="average" className="text-slate-300">Hitter Handedness</Label>
+              <RadioGroupItem value="average" id="average" className="border-[#C26F4F]" />
+              <Label htmlFor="average" className="text-[#57544B]">Hitter Handedness</Label>
             </div>
           </RadioGroup>
         </div>
@@ -52,21 +52,21 @@ const OpponentSelection = ({
         {opponentType === "specific" && (
           <div className="space-y-3">
             <div>
-              <Label className="text-slate-300 mb-2 block">Batter Name</Label>
+              <Label className="text-[#57544B] mb-2 block">Batter Name</Label>
               <Input
                 value={batterName}
                 onChange={(e) => onBatterNameChange(e.target.value)}
                 placeholder="e.g., Aaron Judge"
-                className="bg-slate-700/50 border-slate-600 text-white"
+                className="bg-[#FBFAF6] border-[#E0DACE] text-[#1A1915]"
               />
             </div>
             <div>
-              <Label className="text-slate-300 mb-2 block">Hot Zone Metric</Label>
+              <Label className="text-[#57544B] mb-2 block">Hot Zone Metric</Label>
               <Select value={hotZoneMetric} onValueChange={onHotZoneMetricChange}>
-                <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
+                <SelectTrigger className="bg-[#FBFAF6] border-[#E0DACE] text-[#1A1915]">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-slate-700 border-slate-600">
+                <SelectContent className="bg-white border-[#E7E2D6]">
                   <SelectItem value="woba">wOBA</SelectItem>
                   <SelectItem value="slugging">Slugging %</SelectItem>
                   <SelectItem value="whiff_rate">Whiff %</SelectItem>
@@ -78,15 +78,15 @@ const OpponentSelection = ({
 
         {opponentType === "average" && (
           <div>
-            <Label className="text-slate-300 mb-2 block">Handedness</Label>
+            <Label className="text-[#57544B] mb-2 block">Handedness</Label>
             <RadioGroup value={handedness} onValueChange={onHandednessChange} className="space-y-2">
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="L" id="left" className="border-slate-500" />
-                <Label htmlFor="left" className="text-slate-300">vs. Left-Handed Hitter</Label>
+                <RadioGroupItem value="L" id="left" className="border-[#C26F4F]" />
+                <Label htmlFor="left" className="text-[#57544B]">vs. Left-Handed Hitter</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="R" id="right" className="border-slate-500" />
-                <Label htmlFor="right" className="text-slate-300">vs. Right-Handed Hitter</Label>
+                <RadioGroupItem value="R" id="right" className="border-[#C26F4F]" />
+                <Label htmlFor="right" className="text-[#57544B]">vs. Right-Handed Hitter</Label>
               </div>
             </RadioGroup>
           </div>

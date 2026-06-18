@@ -13,18 +13,18 @@ const LeagueSelection = ({ league, onLeagueChange }: LeagueSelectionProps) => {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">1</div>
-        <h3 className="text-lg font-semibold text-white">League Selection</h3>
-        <Users className="h-4 w-4 text-blue-400" />
+        <div className="bg-[#F3ECE5] text-[#C26F4F] rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold">1</div>
+        <h3 className="text-lg font-semibold text-[#1A1915]">League Selection</h3>
+        <Users className="h-4 w-4 text-[#C26F4F]" />
       </div>
       
       <div className="ml-10">
-        <Label className="text-slate-300 mb-2 block">League</Label>
+        <Label className="text-[#57544B] mb-2 block">League</Label>
         <Select value={league} onValueChange={onLeagueChange}>
-          <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
+          <SelectTrigger className="bg-[#FBFAF6] border-[#E0DACE] text-[#1A1915]">
             <SelectValue placeholder="Select League" />
           </SelectTrigger>
-          <SelectContent className="bg-slate-700 border-slate-600">
+          <SelectContent className="bg-white border-[#E7E2D6]">
             <SelectItem value="mlb">🏆 Major League (MLB)</SelectItem>
             <SelectItem value="milb">⚾ Minor League (MiLB)</SelectItem>
           </SelectContent>

@@ -1,151 +1,146 @@
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { BarChart3, Target, TrendingUp, Users, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 
+const services = [
+  {
+    title: "Pitch Design",
+    body: "A recommendation engine that analyzes situational data to optimize pitch selection and maximize effectiveness against specific batters.",
+  },
+  {
+    title: "Biomechanical Analysis",
+    body: "Comprehensive motion analysis and mechanical optimization to improve performance while reducing injury risk through data-driven insight.",
+  },
+  {
+    title: "Performance Analytics",
+    body: "Real-time tracking and trend analysis that surfaces actionable insight for continuous improvement and strategic planning.",
+  },
+];
+
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-[#F5F4EE]">
       <Navbar />
-      
-      {/* Hero Section */}
-      <section className="pt-20 pb-16 px-4">
-        <div className="max-w-6xl mx-auto text-center">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-            Data-Driven Development for the{" "}
-            <span className="bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
-              Modern Athlete
-            </span>
-          </h1>
-          <p className="text-xl text-slate-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Revolutionizing baseball performance through advanced analytics, biomechanical insights, 
-            and personalized pitch design strategies that give players the competitive edge they need.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg">
-              <Link to="/login">
-                Access Analytics Platform
-                <ChevronRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button variant="outline" size="lg" className="border-slate-400 text-slate-300 hover:bg-slate-800 px-8 py-4 text-lg">
-              Learn More
-            </Button>
-          </div>
+
+      {/* Hero */}
+      <section className="max-w-[1000px] mx-auto px-7 pt-24 pb-[72px] text-center">
+        <h1 className="font-display text-[44px] md:text-[62px] leading-[1.04] font-medium tracking-[-0.02em] text-[#1A1915] mb-6 text-balance">
+          Data-driven development for the{" "}
+          <span className="text-[#C26F4F]">modern athlete</span>
+        </h1>
+        <p className="text-xl leading-[1.6] text-[#57544B] max-w-[660px] mx-auto mb-[38px]">
+          Advanced analytics, biomechanical insight, and personalized pitch-design
+          strategy — the competitive edge for players and coaches who let the data lead.
+        </p>
+        <div className="flex gap-3.5 justify-center flex-wrap">
+          <Button
+            asChild
+            className="bg-[#C26F4F] hover:bg-[#A85638] text-white rounded-[9px] px-[26px] py-3.5 text-base font-semibold h-auto"
+          >
+            <Link to="/login">
+              Access analytics platform
+              <span className="ml-2 text-[17px] leading-none">&rarr;</span>
+            </Link>
+          </Button>
+          <Button
+            variant="outline"
+            className="bg-transparent text-[#3A382F] border border-[#D8D2C4] hover:bg-[#EFEDE4] rounded-[9px] px-[26px] py-3.5 text-base font-medium h-auto"
+          >
+            Learn more
+          </Button>
         </div>
       </section>
 
-      {/* Services Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-white text-center mb-4">
-            Elite Performance Solutions
+      {/* Services */}
+      <section className="max-w-[1160px] mx-auto px-7 pt-10 pb-20">
+        <h2 className="font-display text-[40px] font-medium tracking-[-0.015em] text-center text-[#1A1915] mb-3">
+          Elite performance solutions
+        </h2>
+        <p className="text-center text-[#6E6B61] text-[17px] max-w-[560px] mx-auto mb-14 leading-[1.55]">
+          A focused suite of tools that turns raw tracking data into decisions you can use on the mound.
+        </p>
+        <div className="grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(280px,1fr))]">
+          {services.map((svc) => (
+            <div
+              key={svc.title}
+              className="bg-white border border-[#E7E2D6] rounded-[14px] px-[30px] py-[34px] transition-all hover:border-[#D8CFBD] hover:shadow-[0_6px_22px_rgba(40,38,30,0.06)]"
+            >
+              <h3 className="text-[21px] font-semibold mb-3 text-[#1A1915] tracking-[-0.01em]">
+                {svc.title}
+              </h3>
+              <p className="text-[#57544B] text-[15px] leading-[1.62]">{svc.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* About */}
+      <section className="bg-[#EFEDE4] border-y border-[#E3DDD0]">
+        <div className="max-w-[760px] mx-auto px-7 py-20 text-center">
+          <h2 className="font-display text-[38px] font-medium tracking-[-0.015em] mb-7 text-[#1A1915]">
+            About Push Performance AZ
           </h2>
-          <p className="text-slate-300 text-center mb-16 text-lg max-w-2xl mx-auto">
-            Our comprehensive suite of analytics tools empowers players and coaches with actionable insights
+          <p className="text-[19px] leading-[1.65] text-[#3A382F] mb-[22px]">
+            We believe the future of baseball lies in the intelligent application of
+            data science and biomechanical research. Our mission is to bridge raw data
+            and actionable insight, helping players and coaches make decisions that hold
+            up on the field.
           </p>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-all duration-300 group">
-              <CardContent className="p-8 text-center">
-                <div className="bg-blue-600/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-600/30 transition-colors">
-                  <Target className="h-8 w-8 text-blue-400" />
-                </div>
-                <h3 className="text-2xl font-semibold text-white mb-4">Pitch Design</h3>
-                <p className="text-slate-300 leading-relaxed">
-                  Advanced pitch recommendation engine that analyzes situational data to optimize pitch selection and maximize effectiveness against specific batters.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-all duration-300 group">
-              <CardContent className="p-8 text-center">
-                <div className="bg-emerald-600/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-emerald-600/30 transition-colors">
-                  <BarChart3 className="h-8 w-8 text-emerald-400" />
-                </div>
-                <h3 className="text-2xl font-semibold text-white mb-4">Biomechanical Analysis</h3>
-                <p className="text-slate-300 leading-relaxed">
-                  Comprehensive motion analysis and mechanical optimization to improve performance while reducing injury risk through data-driven insights.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-slate-800/50 border-slate-700 hover:bg-slate-800/70 transition-all duration-300 group">
-              <CardContent className="p-8 text-center">
-                <div className="bg-purple-600/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-purple-600/30 transition-colors">
-                  <TrendingUp className="h-8 w-8 text-purple-400" />
-                </div>
-                <h3 className="text-2xl font-semibold text-white mb-4">Performance Analytics</h3>
-                <p className="text-slate-300 leading-relaxed">
-                  Real-time performance tracking and trend analysis that provides actionable insights for continuous improvement and strategic planning.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* About Section */}
-      <section className="py-20 px-4 bg-slate-800/30">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="flex justify-center mb-8">
-            <div className="bg-gradient-to-r from-blue-600 to-emerald-600 w-20 h-20 rounded-full flex items-center justify-center">
-              <Users className="h-10 w-10 text-white" />
-            </div>
-          </div>
-          <h2 className="text-4xl font-bold text-white mb-8">About Push Performance AZ</h2>
-          <p className="text-xl text-slate-300 leading-relaxed mb-8">
-            At Push Performance Analytics, we believe that the future of baseball lies in the intelligent 
-            application of data science and biomechanical research. Our mission is to bridge the gap between 
-            raw data and actionable performance insights, empowering players and coaches to make informed 
-            decisions that drive results on the field.
-          </p>
-          <p className="text-lg text-slate-400 leading-relaxed">
-            Founded by experts in sports science and data analytics, we combine cutting-edge technology 
-            with deep baseball knowledge to deliver solutions that are both scientifically sound and 
-            practically applicable in real-world competitive environments.
+          <p className="text-base leading-[1.7] text-[#6E6B61]">
+            Founded by experts in sports science and data analytics, we pair
+            cutting-edge technology with deep baseball knowledge to deliver solutions
+            that are both scientifically sound and practical in competitive environments.
           </p>
         </div>
       </section>
 
-      {/* Contact Footer */}
-      <footer className="py-16 px-4 border-t border-slate-700">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-8 text-center md:text-left">
-            <div>
-              <h3 className="text-2xl font-bold text-white mb-4">Get in Touch</h3>
-              <p className="text-slate-300 mb-2">Ready to elevate your game?</p>
-              <p className="text-slate-400">Contact us for a consultation</p>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold text-white mb-4">Contact Info</h4>
-              <p className="text-slate-300 mb-2">Tempe, AZ</p>
-              <p className="text-slate-300 mb-2">pushperformanceaz9@gmail.com</p>
-              <p className="text-slate-300">(480) 645-5650</p>
-            </div>
-            <div>
-              <h4 className="text-lg font-semibold text-white mb-4">Follow Us</h4>
-              <div className="flex space-x-4 justify-center md:justify-start">
-                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white" asChild>
-                  <a href="https://x.com/PUSHbsbl" target="_blank" rel="noopener noreferrer">
-                    X
-                  </a>
-                </Button>
-                <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white" asChild>
-                  <a href="https://www.instagram.com/pushperformanceaz" target="_blank" rel="noopener noreferrer">
-                    Instagram
-                  </a>
-                </Button>
-              </div>
+      {/* Footer */}
+      <footer className="max-w-[1160px] mx-auto px-7 pt-16 pb-12">
+        <div className="grid gap-10 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
+          <div>
+            <h3 className="font-display text-2xl font-medium mb-3.5 text-[#1A1915]">
+              Get in touch
+            </h3>
+            <p className="text-[#3A382F] mb-1 text-[15px]">Ready to elevate your game?</p>
+            <p className="text-[#6E6B61] text-[15px]">Contact us for a consultation.</p>
+          </div>
+          <div>
+            <h4 className="text-sm font-semibold uppercase tracking-[0.06em] text-[#97948A] mb-3.5">
+              Contact
+            </h4>
+            <p className="text-[#3A382F] mb-1.5 text-[15px]">Tempe, AZ</p>
+            <p className="text-[#3A382F] mb-1.5 text-[15px]">pushperformanceaz9@gmail.com</p>
+            <p className="text-[#3A382F] text-[15px]">(480) 645-5650</p>
+          </div>
+          <div>
+            <h4 className="text-sm font-semibold uppercase tracking-[0.06em] text-[#97948A] mb-3.5">
+              Follow
+            </h4>
+            <div className="flex gap-2.5">
+              <a
+                href="https://x.com/PUSHbsbl"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center w-[38px] h-[38px] border border-[#D8D2C4] rounded-lg text-[#3A382F] text-sm font-semibold no-underline"
+              >
+                X
+              </a>
+              <a
+                href="https://www.instagram.com/pushperformanceaz"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center h-[38px] px-3.5 border border-[#D8D2C4] rounded-lg text-[#3A382F] text-sm font-semibold no-underline"
+              >
+                Instagram
+              </a>
             </div>
           </div>
-          <div className="border-t border-slate-700 mt-12 pt-8 text-center">
-            <p className="text-slate-400">
-              © 2024 Push Performance Analytics. All rights reserved.
-            </p>
-          </div>
+        </div>
+        <div className="border-t border-[#E3DDD0] mt-11 pt-[26px] text-center">
+          <p className="text-[#97948A] text-sm">
+            © 2024 Push Performance Analytics. All rights reserved.
+          </p>
         </div>
       </footer>
     </div>

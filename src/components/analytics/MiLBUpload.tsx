@@ -63,23 +63,23 @@ const MiLBUpload = ({ pitcherId, pitcherName }: MiLBUploadProps) => {
   };
 
   return (
-    <Card className="bg-slate-800/50 border-slate-700">
+    <Card className="bg-white border-[#E7E2D6] rounded-[14px] shadow-[0_2px_10px_rgba(40,38,30,0.04)]">
       <CardHeader>
-        <CardTitle className="text-white flex items-center gap-2">
+        <CardTitle className="text-[#1A1915] flex items-center gap-2">
           <Upload className="h-5 w-5" />
           Upload MiLB Data
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="text-sm text-slate-300">
-          <p className="mb-2">Upload CSV data for <span className="font-semibold text-white">{pitcherName}</span></p>
-          <p className="text-xs text-slate-400">
+        <div className="text-sm text-[#57544B]">
+          <p className="mb-2">Upload CSV data for <span className="font-semibold text-[#1A1915]">{pitcherName}</span></p>
+          <p className="text-xs text-[#6E6B61]">
             Required columns: pitch_type, description, balls, strikes, events
           </p>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="milb-file-input" className="text-slate-300">
+          <Label htmlFor="milb-file-input" className="text-[#57544B]">
             Select CSV File
           </Label>
           <Input
@@ -87,15 +87,15 @@ const MiLBUpload = ({ pitcherId, pitcherName }: MiLBUploadProps) => {
             type="file"
             accept=".csv"
             onChange={handleFileChange}
-            className="text-slate-300"
+            className="text-[#57544B]"
           />
         </div>
 
         {file && (
-          <div className="flex items-center gap-2 p-3 bg-slate-700/50 rounded-lg">
-            <FileText className="h-4 w-4 text-blue-400" />
-            <span className="text-sm text-slate-300">{file.name}</span>
-            <span className="text-xs text-slate-400">
+          <div className="flex items-center gap-2 p-3 bg-[#F3ECE5] rounded-lg">
+            <FileText className="h-4 w-4 text-[#C26F4F]" />
+            <span className="text-sm text-[#57544B]">{file.name}</span>
+            <span className="text-xs text-[#6E6B61]">
               ({(file.size / 1024 / 1024).toFixed(2)} MB)
             </span>
           </div>
@@ -120,7 +120,7 @@ const MiLBUpload = ({ pitcherId, pitcherName }: MiLBUploadProps) => {
         <Button
           onClick={handleUpload}
           disabled={!file || isUploading}
-          className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+          className="w-full bg-[#C26F4F] hover:bg-[#A85638]"
         >
           {isUploading ? "Uploading..." : "Upload MiLB Data"}
         </Button>

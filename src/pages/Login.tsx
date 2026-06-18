@@ -1,10 +1,5 @@
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { BarChart3, Lock, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
@@ -39,87 +34,80 @@ const Login = () => {
     }, 1000);
   };
 
+  const inputClass =
+    "w-full bg-[#FBFAF6] border border-[#E0DACE] rounded-[9px] px-[13px] py-[11px] text-[15px] text-[#1A1915] outline-none focus:bg-white focus:border-[#C26F4F] placeholder:text-[#97948A]";
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        {/* Logo Header */}
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center space-x-3">
-            <div className="bg-gradient-to-r from-blue-600 to-emerald-600 p-3 rounded-xl">
-              <BarChart3 className="h-8 w-8 text-white" />
-            </div>
-            <span className="text-2xl font-bold text-white">Push Performance AZ</span>
+    <div className="min-h-screen bg-[#F5F4EE] flex items-center justify-center px-6 py-12">
+      <div className="w-full max-w-[420px]">
+        {/* Logo */}
+        <div className="text-center mb-[30px]">
+          <Link to="/" className="inline-flex items-center gap-[11px]">
+            <img
+              src="/push-performance-logo.png"
+              alt="Push Performance"
+              className="h-10 w-auto"
+            />
+            <span className="font-display text-[22px] font-semibold text-[#1A1915]">
+              Push Performance AZ
+            </span>
           </Link>
-          <p className="text-slate-400 mt-2">Access your analytics dashboard</p>
+          <p className="text-[#6E6B61] mt-3.5 text-[15px]">
+            Access your analytics dashboard
+          </p>
         </div>
 
-        {/* Login Card */}
-        <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
-          <CardHeader className="text-center pb-6">
-            <div className="bg-slate-700/50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Lock className="h-8 w-8 text-blue-400" />
-            </div>
-            <CardTitle className="text-2xl text-white">Welcome Back</CardTitle>
-            <p className="text-slate-400">Sign in to your account</p>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleLogin} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="username" className="text-slate-300">Username</Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-3 h-5 w-5 text-slate-400" />
-                  <Input
-                    id="username"
-                    type="text"
-                    placeholder="Enter your username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="pl-10 bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500"
-                    required
-                  />
-                </div>
-              </div>
+        {/* Card */}
+        <div className="bg-white border border-[#E7E2D6] rounded-2xl px-[34px] py-9 shadow-[0_8px_30px_rgba(40,38,30,0.05)]">
+          <h2 className="font-display text-[26px] font-medium text-center mb-1 text-[#1A1915]">
+            Welcome back
+          </h2>
+          <p className="text-center text-[#6E6B61] text-sm mb-7">
+            Sign in to your account
+          </p>
+          <form onSubmit={handleLogin}>
+            <label className="block text-[13px] font-medium text-[#57544B] mb-[7px]">
+              Username
+            </label>
+            <input
+              type="text"
+              placeholder="Enter your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className={`${inputClass} mb-[18px]`}
+              required
+            />
+            <label className="block text-[13px] font-medium text-[#57544B] mb-[7px]">
+              Password
+            </label>
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={`${inputClass} mb-6`}
+              required
+            />
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-[#C26F4F] hover:bg-[#A85638] disabled:opacity-70 text-white border-none rounded-[9px] py-[13px] text-base font-semibold cursor-pointer transition-colors"
+            >
+              {isLoading ? "Signing in…" : "Sign in"}
+            </button>
+          </form>
+          <p className="text-center text-[#6E6B61] text-[13px] mt-[22px]">
+            Don't have an account?{" "}
+            <a href="#" className="text-[#C26F4F] no-underline font-medium">
+              Contact us for access
+            </a>
+          </p>
+        </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-slate-300">Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-5 w-5 text-slate-400" />
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500"
-                    required
-                  />
-                </div>
-              </div>
-
-              <Button 
-                type="submit" 
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg"
-                disabled={isLoading}
-              >
-                {isLoading ? "Signing In..." : "Sign In"}
-              </Button>
-            </form>
-
-            <div className="mt-6 text-center">
-              <p className="text-slate-400 text-sm">
-                Don't have an account?{" "}
-                <a href="#" className="text-blue-400 hover:text-blue-300 transition-colors">
-                  Contact us for access
-                </a>
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Back to Home */}
-        <div className="text-center mt-6">
-          <Link to="/" className="text-slate-400 hover:text-white transition-colors text-sm">
-            ← Back to Home
+        {/* Back to home */}
+        <div className="text-center mt-[22px]">
+          <Link to="/" className="text-[#6E6B61] hover:text-[#1A1915] text-sm">
+            ← Back to home
           </Link>
         </div>
       </div>

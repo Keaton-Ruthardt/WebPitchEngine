@@ -164,35 +164,35 @@ const Analytics = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-[#F5F4EE]">
       <Navbar />
-      
-      <div className="pt-20 px-4 pb-8">
-        <div className="max-w-7xl mx-auto">
+
+      <div className="pt-11 px-7 pb-16">
+        <div className="max-w-[1280px] mx-auto">
           <div className="mb-8">
-            <h1 className="text-4xl font-bold text-white mb-2">Pitch Recommendation Engine</h1>
-            <p className="text-slate-300 text-lg">Data-driven pitch recommendations and performance analytics</p>
-            
+            <h1 className="font-display text-[38px] font-medium tracking-[-0.015em] text-[#1A1915] mb-2">Pitch Recommendation Engine</h1>
+            <p className="text-[#6E6B61] text-[17px]">Data-driven pitch recommendations and performance analytics.</p>
+
             {/* Backend Status Indicator */}
-            <div className="mt-4 flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <div 
-                  className={`w-3 h-3 rounded-full ${
-                    backendStatus.connected ? 'bg-green-500' : 'bg-red-500'
-                  }`} 
+            <div className="mt-4 flex items-center gap-6 flex-wrap">
+              <div className="flex items-center gap-2">
+                <div
+                  className={`w-[9px] h-[9px] rounded-full ${
+                    backendStatus.connected ? 'bg-[#6F9A78]' : 'bg-[#B2604A]'
+                  }`}
                 />
-                <span className="text-sm text-slate-300">
+                <span className="text-[13px] text-[#6E6B61]">
                   Backend: {backendStatus.connected ? 'Connected' : 'Disconnected'}
                 </span>
               </div>
               {backendStatus.connected && (
-                <div className="flex items-center space-x-2">
-                  <div 
-                    className={`w-3 h-3 rounded-full ${
-                      backendStatus.pybaseball_available ? 'bg-green-500' : 'bg-yellow-500'
-                    }`} 
+                <div className="flex items-center gap-2">
+                  <div
+                    className={`w-[9px] h-[9px] rounded-full ${
+                      backendStatus.pybaseball_available ? 'bg-[#6F9A78]' : 'bg-[#C0954F]'
+                    }`}
                   />
-                  <span className="text-sm text-slate-300">
+                  <span className="text-[13px] text-[#6E6B61]">
                     MLB Data: {backendStatus.pybaseball_available ? 'Available' : 'Limited'}
                   </span>
                 </div>
