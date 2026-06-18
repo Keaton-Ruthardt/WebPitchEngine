@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { MousePointerClick } from "lucide-react";
 
 interface CountTreeData {
   count: string;
@@ -196,6 +197,14 @@ const CountTreeVisualization = ({ reportData, selectedMetrics }: CountTreeVisual
             </div>
           </CardContent>
         </Card>
+
+        {/* Click hint */}
+        <div className="flex items-center justify-center gap-2.5 bg-[#F3ECE5] border border-[#E6DCCF] rounded-[9px] px-4 py-3">
+          <MousePointerClick className="h-[18px] w-[18px] text-[#C26F4F]" />
+          <span className="text-sm font-medium text-[#3A382F]">
+            Click a count node to view its pitch recommendations.
+          </span>
+        </div>
 
         {/* Count Tree Grid */}
         <div className="relative bg-[#FBFAF6] border border-[#ECE7DC] rounded-lg p-6" style={{ minHeight: '700px' }}>
