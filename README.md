@@ -39,24 +39,6 @@ Full methodology and weight rationale: [`SCORING_SYSTEM_GUIDE.md`](./SCORING_SYS
 | Auth | Flask session auth |
 | Deploy | Render (static frontend + Python web service) |
 
-## Running locally
-
-**Backend (Flask API → `http://localhost:5000`)**
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-python app.py
-```
-
-**Frontend (→ `http://localhost:5173`)**
-```bash
-npm install      # or: bun install
-npm run dev      # or: bun dev
-```
-Set `VITE_API_URL` to point the frontend at your backend (defaults to the deployed backend).
-
 ## API endpoints
 
 | Method | Endpoint | Purpose |
