@@ -3,7 +3,6 @@
 A full-stack baseball analytics platform that turns raw pitch-by-pitch data into **count-specific, data-driven pitch recommendations** for MLB and MiLB pitchers. Built for Push Performance.
 
 **🔗 Live app:** https://webpitchengine-frontend.onrender.com
-**Demo login:** `coach` / `push_performance` (or `admin` / `password123`)
 
 > Note: the backend is hosted on a free Render tier and may take ~30–60s to wake on the first request.
 
