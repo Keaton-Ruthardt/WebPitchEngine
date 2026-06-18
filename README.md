@@ -1,124 +1,72 @@
 # Push Performance Insights Engine
 
-A comprehensive baseball analytics platform that provides data-driven pitch recommendations and performance insights for both MLB and MiLB pitchers.
+A full-stack baseball analytics platform that turns raw pitch-by-pitch data into **count-specific, data-driven pitch recommendations** for MLB and MiLB pitchers. Built for Push Performance.
 
-## Features
+**🔗 Live app:** https://webpitchengine-frontend.onrender.com
+**Demo login:** `coach` / `push_performance` (or `admin` / `password123`)
 
-### Enhanced Tree Visualization
-- **Interactive Hover Tooltips**: Hover over count nodes to see detailed metrics
-- **Raw Data Display**: Click on nodes to view comprehensive data tables
-- **Real-time Metrics**: Display whiff rates, hard hit rates, chase rates, and more
-- **Pitch Effectiveness Rating (PER)**: 0-100 scale with color-coded performance indicators
-- **Actionable Insights**: Clear recommendations for pitch selection in each count
+> Note: the backend is hosted on a free Render tier and may take ~30–60s to wake on the first request.
 
-### Data Integration
-- **MLB Data**: Real-time Statcast data via pybaseball
-- **MiLB Support**: CSV upload functionality for minor league data
-- **Individualized Reports**: Player-specific analysis and recommendations
-- **Count-specific Analysis**: Detailed breakdown by ball-strike counts
+---
 
-### Advanced Analytics
-- **Count Tree Analysis**: Visual representation of pitch recommendations by count
-- **Hot Zone Analysis**: Batter-specific zone analysis for specific matchups
-- **Performance Metrics**: Comprehensive statistical analysis
-- **Real-time Processing**: Live data fetching and analysis
+## What it does
 
-## Setup Instructions
+Every pitch outcome is scored, aggregated by ball–strike count, and rolled up into a single **Pitch Effectiveness Rating (PER)** so a coach can see, at a glance, which pitch to throw in each count against a given hitter or handedness. Results render as an interactive count tree with hover metrics and drill-down raw data.
 
-### Prerequisites
-- Node.js 18+ and npm/bun
-- Python 3.8+ and pip
-- Git
+- **MLB:** pulls live Statcast data via `pybaseball` for any pitcher/season.
+- **MiLB:** upload a pitcher's CSV and get the same analysis where Statcast isn't available.
+- **Matchup-aware:** analyze vs. a specific batter or vs. league-average handedness.
+- **Count tree visualization:** PER and supporting metrics for all 12 ball–strike counts.
 
-### Backend Setup (Flask API)
+## How it works — the PER model
 
-1. **Navigate to backend directory**:
-   ```bash
-   cd backend
-   ```
+The engine grades each pitch type, in each count, on a **0–100 scale** derived from the metrics that actually move expected run value (xRV):
 
-2. **Create virtual environment**:
-   ```bash
-   python -m venv venv
-   ```
+1. **Per-metric scoring** — whiff rate, hard-hit rate, called-strike rate, weak-contact rate, and chase rate are each scored by percentile against league benchmarks (`league_averages_2024.json`).
+2. **xRV-weighted combination** — metrics are combined using weights reflecting each one's impact on run value (hard-hit rate carries the most weight, chase rate the least).
+3. **Count-specific adjustment** — weights shift by count: ahead-in-count situations prioritize whiffs/called strikes, behind-in-count prioritize avoiding hard contact and walks.
+4. **Final PER (0–100)** with a color-coded recommendation band (Elite → Avoid).
 
-3. **Activate virtual environment**:
-   - Windows: `venv\Scripts\activate`
-   - macOS/Linux: `source venv/bin/activate`
+Full methodology and weight rationale: [`SCORING_SYSTEM_GUIDE.md`](./SCORING_SYSTEM_GUIDE.md). League-average derivation: [`LEAGUE_AVERAGES_GUIDE.md`](./LEAGUE_AVERAGES_GUIDE.md).
 
-4. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+## Tech stack
 
-5. **Install pybaseball** (for MLB data):
-   ```bash
-   pip install pybaseball
-   ```
+| Layer | Stack |
+|-------|-------|
+| Frontend | React + TypeScript, Vite, shadcn/ui, Plotly.js |
+| Backend | Flask (Python), pandas, numpy |
+| Data | Statcast via `pybaseball` (MLB), CSV upload (MiLB) |
+| Auth | Flask session auth |
+| Deploy | Render (static frontend + Python web service) |
 
-6. **Start the Flask server**:
-   ```bash
-   python app.py
-   ```
+## Running locally
 
-The backend will run on `http://localhost:5000`
+**Backend (Flask API → `http://localhost:5000`)**
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+python app.py
+```
 
-### Frontend Setup (React + TypeScript)
+**Frontend (→ `http://localhost:5173`)**
+```bash
+npm install      # or: bun install
+npm run dev      # or: bun dev
+```
+Set `VITE_API_URL` to point the frontend at your backend (defaults to the deployed backend).
 
-1. **Navigate to project root**:
-   ```bash
-   cd ..
-   ```
+## API endpoints
 
-2. **Install dependencies**:
-   ```bash
-   npm install
-   # or
-   bun install
-   ```
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| `GET`  | `/api/pitchers/{league}` | List available pitchers (MLB/MiLB) |
+| `POST` | `/api/analyze` | Generate count-tree pitch analysis |
+| `POST` | `/api/upload-milb` | Upload a MiLB pitcher CSV |
+| `GET`  | `/api/health` | Health check |
 
-3. **Start development server**:
-   ```bash
-   npm run dev
-   # or
-   bun dev
-   ```
-
-The frontend will run on `http://localhost:5173`
-
-## Usage
-
-### MLB Analysis
-1. Select "MLB" as the league
-2. Choose year(s) for analysis (max 2 years)
-3. Select a pitcher from the dropdown
-4. Choose opponent type (specific batter or average handedness)
-5. Select metrics to display in hover tooltips
-6. Click "Generate Pitch Report"
-
-### MiLB Analysis
-1. Select "MiLB" as the league
-2. Choose year(s) for analysis
-3. Select a pitcher from the dropdown
-4. Upload CSV data for the selected pitcher
-5. Configure analysis parameters
-6. Generate the report
-
-### CSV Format for MiLB Data
-Required columns:
-- `pitch_type`: Type of pitch thrown (e.g., "4-Seam Fastball", "Slider")
-- `description`: Outcome of the pitch (e.g., "swinging_strike", "hit_into_play")
-- `balls`: Number of balls in count (0-3)
-- `strikes`: Number of strikes in count (0-2)
-- `events`: Final outcome of at-bat (e.g., "single", "strikeout")
-
-## API Endpoints
-
-### GET `/api/pitchers/{league}`
-Get available pitchers for a given league (MLB/MiLB)
-
-### POST `/api/analyze`
-Generate pitch recommendation analysis
+**`/api/analyze` request:**
 ```json
 {
   "pitcher_id": 676979,
@@ -129,84 +77,17 @@ Generate pitch recommendation analysis
 }
 ```
 
-### POST `/api/upload-milb`
-Upload MiLB CSV data for a pitcher
+## MiLB CSV format
 
-### GET `/api/health`
-Health check endpoint
-
-## Architecture
-
-### Frontend (React + TypeScript)
-- **Components**: Modular UI components with shadcn/ui
-- **State Management**: React hooks for local state
-- **API Integration**: Service layer for backend communication
-- **Visualization**: Interactive count tree with Plotly.js
-
-### Backend (Flask + Python)
-- **Data Processing**: pandas and numpy for statistical analysis
-- **MLB Integration**: pybaseball for Statcast data
-- **File Handling**: CSV upload and validation
-- **Authentication**: Flask-Login for user management
-
-## Data Flow
-
-1. **User Input**: League, pitcher, years, opponent type
-2. **Data Fetching**: 
-   - MLB: pybaseball Statcast API
-   - MiLB: Uploaded CSV files
-3. **Processing**: Statistical analysis and count-specific calculations
-4. **Visualization**: Interactive tree with hover tooltips and raw data tables
-5. **Output**: Comprehensive pitch recommendations by count
-
-## Performance Metrics
-
-The engine calculates and displays:
-- **Whiff Rate**: Percentage of swinging strikes
-- **Hard Hit Rate**: Percentage of balls hit 95+ mph
-- **Called Strike Rate**: Percentage of called strikes
-- **Weak Contact Rate**: Percentage of balls hit <85 mph
-- **Chase Rate**: Percentage of swings on pitches outside the zone
-
-## Pitch Effectiveness Rating (PER)
-
-The system uses a **0-100 Pitch Effectiveness Rating (PER)** that provides clear, actionable insights for pitch selection:
-
-- **95-100**: Elite (Strongly Recommended)
-- **85-94**: Excellent (Recommended)
-- **75-84**: Good (Consider)
-- **65-74**: Above Average (Use sparingly)
-- **55-64**: Average (Avoid)
-- **45-54**: Below Average (Avoid)
-- **35-44**: Poor (Avoid)
-- **0-34**: Very Poor (Avoid)
-
-PER maintains the scientifically accurate weights that affect xRV while providing intuitive guidance for pitch selection decisions. See `SCORING_SYSTEM_GUIDE.md` for detailed information.
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License.
-
-## Support
-
-For issues and questions:
-1. Check the documentation
-2. Review existing issues
-3. Create a new issue with detailed information
+Required columns: `pitch_type`, `description`, `balls`, `strikes`, `events`.
+A reference file is included: [`backend/sample_milb_data.csv`](./backend/sample_milb_data.csv).
 
 ## Roadmap
 
-- [ ] Pitch sequencing analysis
-- [ ] Advanced statistical models
-- [ ] Real-time game analysis
-- [ ] Mobile app support
-- [ ] Team-level analytics
-- [ ] Historical trend analysis
+- Pitch **sequencing** analysis (current model is count-state, not sequence-aware)
+- Expanded statistical models and confidence intervals on PER
+- Real-time in-game analysis and team-level rollups
+
+---
+
+*Built by Keaton Ruthardt.*

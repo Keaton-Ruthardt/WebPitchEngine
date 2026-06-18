@@ -12,6 +12,22 @@ dist
 dist-ssr
 *.local
 
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+venv/
+.venv/
+env/
+
+# Environment / secrets
+.env
+.env.*
+
+# Backend runtime artifacts
+backend/uploads/*
+!backend/uploads/.gitkeep
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
